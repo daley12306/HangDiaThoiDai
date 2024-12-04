@@ -16,9 +16,7 @@ public class User {
     private Long id;
     private String avatar;
     @Column(columnDefinition = "NVARCHAR(255) NOT NULL")
-    private String firstName;
-    @Column(columnDefinition = "NVARCHAR(255) NOT NULL")
-    private String lastName;
+    private String fullName;
     @Column(unique = true, nullable = false)
     private String username;
     @Column(unique = true, nullable = false)

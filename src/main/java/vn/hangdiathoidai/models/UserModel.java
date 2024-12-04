@@ -16,15 +16,13 @@ public class UserModel  implements Serializable {
     @Id
     private Integer id;
     private String avatar;
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String username;
     private String email;
     private String password;
     private Date birthOfDate;
     private String phoneNumber;
     private Date createdAt;
-    private Date deletedAt;
 
 
 }
