@@ -29,5 +29,7 @@ public class Address {
     private String ward;
     @Column(columnDefinition = "VARCHAR(10) NOT NULL")
     private String phoneNumber;
+    @Column(columnDefinition = "BIT DEFAULT 0 NOT NULL")
+    private Boolean isDefault;
 
 }
