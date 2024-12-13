@@ -21,5 +21,6 @@ public interface VoucherService {
 	boolean isVoucherValid(Long id, LocalDate currentDate);
 
 	long getTotalVoucher();
-
+  
+  Voucher findByCode(String code);
 }

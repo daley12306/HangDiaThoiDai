@@ -44,9 +44,8 @@ public class VoucherServiceImpl implements VoucherService {
 	        }
 	    }
 
-
 	    
-	    @Override
+	  @Override
 		public boolean isVoucherValid(Long id, LocalDate currentDate) {
 	        Voucher voucher = getVoucherById(id);
 	        return voucher != null && voucher.isValid(currentDate);
@@ -56,5 +55,10 @@ public class VoucherServiceImpl implements VoucherService {
 		public long getTotalVoucher() {
 			return voucherRepository.count();
 		}
+  
+    @Override
+	  public Voucher findByCode(String code) {
+		  return voucherRepository.findByCode(code);
+	  }
 	    
 }

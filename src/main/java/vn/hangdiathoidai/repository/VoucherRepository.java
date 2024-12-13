@@ -10,7 +10,8 @@ import vn.hangdiathoidai.enums.DiscountType;
 
 @Repository
 public interface VoucherRepository extends JpaRepository<Voucher, Long>{
-	Page<Voucher> findByCodeContainingOrDescriptionContaining(String code, String description, Pageable pageable);
+    Page<Voucher> findByCodeContainingOrDescriptionContaining(String code, String description, Pageable pageable);
     Page<Voucher> findByDiscountType(DiscountType discountType, Pageable pageable);
     Page<Voucher> findByCodeContainingOrDescriptionContainingOrDiscountType(String code, String description, DiscountType discountType, Pageable pageable);
+    Voucher findByCode(String code);
 }
