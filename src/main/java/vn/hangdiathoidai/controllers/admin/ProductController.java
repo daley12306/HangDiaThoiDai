@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpSession;
 import vn.hangdiathoidai.entity.Category;
 import vn.hangdiathoidai.entity.Product;
 import vn.hangdiathoidai.entity.SubCategory;
@@ -133,7 +134,7 @@ public class ProductController {
 
     // Xóa sản phẩm
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable Long id) {
+    public String deleteProduct(@PathVariable Long id, RedirectAttributes redirectAttributes, HttpSession session) {
         productService.delete(id);
         return "redirect:/admin/products";
     }

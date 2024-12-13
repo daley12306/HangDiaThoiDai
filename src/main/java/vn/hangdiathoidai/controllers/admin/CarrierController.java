@@ -30,15 +30,38 @@ public class CarrierController {
                                @RequestParam(name = "size", defaultValue = "10") int size,
                                @RequestParam(name = "keyword", defaultValue = "") String keyword,
                                Model model, HttpSession session) {
+        
+        // Kiểm tra nếu page < 0 thì gán lại là 0
+        if (page < 0) {
+            page = 0;
+        }
+
+        // Tạo Pageable từ các tham số trang và kích thước
         Pageable pageable = PageRequest.of(page, size);
+        
+        // Tìm kiếm các Carrier theo từ khóa và phân trang
         Page<Carrier> carriers = carrierService.searchCarrier(keyword, pageable);
-        
+
+        // Nếu kết quả không đủ, chuyển về trang trước (nếu có)
+        if (carriers.isEmpty() && page > 0) {
+            page--;  // Chuyển về trang trước
+            pageable = PageRequest.of(page, size);  // Tạo lại Pageable
+            carriers = carrierService.searchCarrier(keyword, pageable);  // Tìm kiếm lại trên trang trước đó
+        }
+
+        // Lưu trang hiện tại vào session
         session.setAttribute("currentPage", page);
-        
+
+        // Thêm thông tin vào model để gửi tới view
         model.addAttribute("carriers", carriers);
         model.addAttribute("keyword", keyword);
-        return "admin/carrier/list";  // Đường dẫn đến file list.html là admin/carrier/list
+        model.addAttribute("totalPages", carriers.getTotalPages());
+        model.addAttribute("currentPage", page);
+
+        return "admin/carrier/list";  // Trả về view list.html
     }
+
+
 
     // Mở form thêm Carrier
     @GetMapping("/add")
@@ -61,9 +84,13 @@ public class CarrierController {
         if (totalCarriers % size == 0 && totalCarriers > 0) {
             totalPages--;  // Điều chỉnh trang cuối cùng nếu chia hết
         }
-
+        
+        if (totalCarriers == 0 || totalPages >= totalPages) {
+            totalPages = Math.max(totalPages - 1, 0);  // Nếu không còn phần tử hoặc trang hiện tại vượt quá tổng số trang, quay lại trang trước đó
+        }
+        
         // Redirect về trang cuối cùng
-        return "redirect:/admin/carrier?page=" + (totalPages-1) + "&size=" + size;  // Chuyển hướng về trang cuối
+        return "redirect:/admin/carrier?page=" + totalPages + "&size=" + size;  // Chuyển hướng về trang cuối
     }
 
 
@@ -96,7 +123,17 @@ public class CarrierController {
             page = 0;  // Nếu không có trang hiện tại, mặc định là trang đầu tiên
         }
 
-        return "redirect:/admin/carrier?page=" + page;  // Redirect về trang hiện tại
+        long totalCarrier = carrierService.getTotalCarriers();  // Tổng số phần tử
+        int size = 10;  // Số lượng phần tử mỗi trang (có thể lấy từ tham số hoặc mặc định)
+        int totalPages = (int) Math.ceil((double) totalCarrier / size);  // Tính tổng số trang
+        
+        // Nếu số trang còn lại là 0, chuyển về trang đầu tiên
+        if (totalCarrier == 0 || totalPages >= totalPages) {
+            totalPages = Math.max(totalPages - 1, 0);  // Nếu không còn phần tử hoặc trang hiện tại vượt quá tổng số trang, quay lại trang trước đó
+        }
+
+        // Quay lại trang đúng
+        return "redirect:/admin/carrier?page=" + totalPages + "&size=" + size;  // Quay lại danh sách SubCategory
     }
 
 }

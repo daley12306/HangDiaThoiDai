@@ -2,6 +2,7 @@ package vn.hangdiathoidai.controllers.admin;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -82,6 +84,10 @@ public class SubCategoryController {
             totalPages--;  // Điều chỉnh trang cuối cùng nếu chia hết
         }
         
+        if (totalPages == 0) {
+			totalPages = 1; // Nếu không có phần tử nào, tổng số trang là 1
+		}
+        
         // Quay lại trang cuối cùng
         return "redirect:/admin/subcategory?page=" + (totalPages - 1) + "&size=" + size;  // Quay lại danh sách SubCategory
     }
@@ -89,14 +95,38 @@ public class SubCategoryController {
 
     // Xóa SubCategory
     @GetMapping("/delete/{id}")
-    public String deleteSubCategory(@PathVariable("id") Long id ,HttpSession session) {
-        subCategoryService.deleteSubCategory(id);
-        Integer page = (Integer) session.getAttribute("currentPage");
-        if (page == null) {
-            page = 0;  // Nếu không có trang hiện tại, mặc định là trang đầu tiên
+    public String deleteSubCategory(@PathVariable("id") Long id, HttpSession session, RedirectAttributes redirectAttributes) {
+        try {
+            subCategoryService.deleteSubCategory(id); // Thực hiện xóa danh mục phụ
+            redirectAttributes.addFlashAttribute("successMessage", "Xóa danh mục phụ thành công!");
+        } catch (DataIntegrityViolationException e) {
+            // Nếu xóa thất bại do ràng buộc dữ liệu
+            redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa danh mục phụ vì đang được sử dụng!");
+        } catch (Exception e) {
+            // Xử lý các lỗi khác
+            redirectAttributes.addFlashAttribute("errorMessage", "Đã xảy ra lỗi khi xóa danh mục phụ!");
         }
-        return "redirect:/admin/subcategory?page="+page; // Quay lại danh sách sau khi xóa
+
+        // Lấy trang hiện tại từ session
+        Integer currentPage = (Integer) session.getAttribute("currentPage");
+        if (currentPage == null) {
+            currentPage = 0;  // Nếu không có trang hiện tại, mặc định là trang đầu tiên
+        }
+
+        // Kiểm tra số lượng SubCategory còn lại sau khi xóa
+        long totalSubCategory = subCategoryService.getTotalSubCategory();  // Tổng số phần tử
+        int size = 10;  // Số lượng phần tử mỗi trang (có thể lấy từ tham số hoặc mặc định)
+        int totalPages = (int) Math.ceil((double) totalSubCategory / size);  // Tính tổng số trang
+        
+        // Nếu số trang còn lại là 0, chuyển về trang đầu tiên
+        if (totalSubCategory == 0 || currentPage >= totalPages) {
+            currentPage = Math.max(totalPages - 1, 0);  // Nếu không còn phần tử hoặc trang hiện tại vượt quá tổng số trang, quay lại trang trước đó
+        }
+
+        // Quay lại trang đúng
+        return "redirect:/admin/subcategory?page=" + currentPage + "&size=" + size;  // Quay lại danh sách SubCategory
     }
+
     
  // Sửa SubCategory
     @GetMapping("/edit/{id}")
@@ -105,7 +135,7 @@ public class SubCategoryController {
         model.addAttribute("categories", categories);
         SubCategory subCategory = subCategoryService.getSubCategoriesById(id); // Get existing subCategory
         model.addAttribute("subCategory", subCategory);
-        return "admin/subcategory/edit"; // Thymeleaf template
+        return "admin/subcategory/edit"; 
     }
 
     @PostMapping("/edit/{id}")
@@ -132,6 +162,9 @@ public class SubCategoryController {
         }
         
         // Quay lại trang cuối cùng
+		if (totalPages == 0) {
+			totalPages = 1;
+		}
         return "redirect:/admin/subcategory?page=" + (totalPages - 1) + "&size=" + size;  // Quay lại danh sách SubCategory
     }
 

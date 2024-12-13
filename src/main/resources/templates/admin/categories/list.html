@@ -14,10 +14,14 @@
             <input type="text" name="search" th:value="${search}" placeholder="Search by name" class="form-control me-2" />
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
-
+		
         <!-- Thêm mới Category -->
         <a href="/admin/categories/add" class="btn btn-success mb-3">Thêm mới</a>
-
+		
+		<!-- Hiển thị thông báo -->
+		<div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+		<div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+		
         <!-- Bảng danh sách category -->
         <table class="table table-bordered table-striped">
            <thead>

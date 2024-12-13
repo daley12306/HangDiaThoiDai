@@ -42,7 +42,12 @@
                     <td th:text="${product.description}"></td>
                     <td>
                         <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="btn btn-warning btn-sm">Sửa</a>
-                        <a th:href="@{/admin/products/delete/{id}(id=${product.id})}" class="btn btn-danger btn-sm">Xóa</a>
+                        <a th:href="@{/admin/products/delete/{id}(id=${product.id})}" 
+						   class="btn btn-danger btn-sm" 
+						   onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
+						   Xóa
+						</a>
+
                     </td>
                 </tr>
             </tbody>

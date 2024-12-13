@@ -33,4 +33,6 @@ public interface CategoryService {
 
 	List<SubCategory> getSubCategoriesByCategory(Optional<Category> category);
 
+	long getTotalCategory();
+
 }

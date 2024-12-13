@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,11 +42,16 @@ public class CategoryServiceImpl implements CategoryService {
     // Xóa Category
     @Override
 	public boolean deleteCategory(Long id) {
-        if (categoryRepository.existsById(id)) {
-            categoryRepository.deleteById(id);
-            return true;
+    	try {
+            if (categoryRepository.existsById(id)) {
+                categoryRepository.deleteById(id);
+                return true; // Xóa thành công
+            }
+            return false; // Không tồn tại category
+        } catch (DataIntegrityViolationException e) {
+            // Lỗi ràng buộc dữ liệu, ném ngoại lệ hoặc xử lý logic khác
+            throw new IllegalStateException("Không thể xóa danh mục vì đang được sử dụng!", e);
         }
-        return false;
     }
 
     // Lấy danh sách tất cả các Category
@@ -72,6 +78,9 @@ public class CategoryServiceImpl implements CategoryService {
     
     @Override
 	public Page<Category> searchCategories(String search, int page, int size) {
+    	if (page < 0) {
+            page = 0; // Đảm bảo không truyền giá trị âm
+        }
         Pageable pageable = PageRequest.of(page, size);
         if (search != null && !search.isEmpty()) {
             return categoryRepository.findByNameContaining(search, pageable);
@@ -94,5 +103,10 @@ public class CategoryServiceImpl implements CategoryService {
 	public List<SubCategory> getSubCategoriesByCategory(Optional<Category> category) {
         return subCategoryRepository.findByParentCategory(category);
     }
+
+	@Override
+	public long getTotalCategory() {
+		return categoryRepository.count();
+	}
 
 }
