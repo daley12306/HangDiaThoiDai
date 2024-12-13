@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+<head>
+    <title>Sửa sảm phẩm</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h2>Sửa Sản phẩm</h2>
+
+        <form th:action="@{/admin/products/edit/{id}(id=${product.id})}" th:object="${product}" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên sản phẩm</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Nhập tên sản phẩm" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Mô tả</label>
+                <textarea class="form-control" id="description" th:field="*{description}" placeholder="Nhập mô tả sản phẩm" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="cover" class="form-label">Ảnh bìa</label>
+                <input type="file" class="form-control" id="cover" name="file" accept="image/*" onchange="previewImage(event)" /><br>
+                <div>
+                    <img id="preview" th:src="@{/uploads/{filename}(filename=${product.cover})}" alt="Cover" style="width: 150px; height: 150px;" />
+                </div>
+               </div>
+
+            <div class="mb-3">
+                <label for="subCategory" class="form-label">Danh mục phụ</label>
+                <select class="form-select" id="subCategory" th:field="*{subCategory.id}" required>
+                    <option value="" th:text="'Chọn danh mục phụ'"></option>
+                    <!-- Giả sử bạn có một danh sách subCategories -->
+                    <option th:each="subCategory : ${subCategories}" th:value="${subCategory.id}" th:text="${subCategory.name}"></option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Cập nhật Sản phẩm</button>
+            <a href="/admin/products" class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+</body>
+</html>

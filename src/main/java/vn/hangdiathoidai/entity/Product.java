@@ -19,9 +19,18 @@ public class Product {
     private String name;
     @Column(columnDefinition = "TEXT NOT NULL")
     private String description;
+    
     private String cover;
+    
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private SubCategory subCategory;
+    
     private Date createdAt;
+    
+    @PrePersist
+    public void prePersist() {
+            this.createdAt = new Date();
+        }
 }
+
