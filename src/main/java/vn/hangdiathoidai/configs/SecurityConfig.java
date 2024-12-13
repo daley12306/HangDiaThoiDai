@@ -43,6 +43,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authorize -> authorize
                        .requestMatchers("/**", "/home","/admin", "/css/**", "/js/**", "/images/**", "/assets/**").permitAll()
                        .anyRequest().authenticated()
+                       
 				)
 				.formLogin(Customizer.withDefaults())
 				.build();

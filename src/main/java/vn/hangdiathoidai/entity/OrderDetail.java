@@ -19,9 +19,6 @@ public class OrderDetail {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @ManyToOne
-    @JoinColumn(name = "payment_id", nullable = false)
-    private PaymentDetail payment;
     private Integer total; // Tổng tiền
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
