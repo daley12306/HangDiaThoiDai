@@ -39,7 +39,7 @@ public class CartController {
 		List<CartItem> cartItems = cartItemService.findByCartId(cart.getId());
 		model.addAttribute("cart", cart);
 		model.addAttribute("cartItems", cartItems);
-		return "cart";
+		return "user/cart";
 	}
 	
 	@GetMapping("/delete/{id}")

@@ -47,6 +47,8 @@
 										<div class="form-group">
 											<label>Số điện thoại</label> <input class="form-control"
 												type="text" th:value="${user.phoneNumber}"
+												pattern="^\d{10}$" 
+       											title="Số điện thoại phải bao gồm đúng 10 chữ số." 
 												name="phoneNumber">
 										</div>
 										<div class="form-group">
