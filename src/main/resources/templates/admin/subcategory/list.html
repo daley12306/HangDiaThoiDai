@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+<head>
+    <title>Danh sách Danh mục phụ</title>
+    <style>
+    .pagination-container {
+				    display: flex;
+				    justify-content: center; /* Căn giữa theo chiều ngang */
+				    margin-top: 20px; /* Thêm khoảng cách ở trên nếu cần */
+				}
+
+        </style>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <h2>SubCategory List</h2>
+        <form action="#" method="get" class="d-flex mb-3">
+                <input type="text" name="search" class="form-control me-2" placeholder="Search by name" th:value="${searchTerm}">
+                
+                <select name="parentCategoryId" class="form-control me-2">
+                <option value="" th:selected="${parentCategoryId == null}">All Categories</option>
+                <th:block th:each="category : ${categories}">
+                    <option th:value="${category.id}" 
+                            th:text="${category.name}" 
+                            th:selected="${category.id == parentCategoryId}"></option>
+                </th:block>
+            </select>
+            <button type="submit" class="btn btn-primary">Search</button>
+          	
+        </form>
+		        <a href="#" class="btn btn-success mt-3" th:href="@{/admin/subcategory/add}">Thêm mới</a>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Name</th>
+                    <th>Parent Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="subCategory, iterStat : ${subCategories}">
+            		<td th:text="${iterStat.index + 1}"></td> <!-- Số thứ tự -->
+                    <td th:text="${subCategory.name}"></td>
+                    <td th:text="${subCategory.parentCategory.name}"></td>
+                    <td>
+                        <a href="#" th:href="@{/admin/subcategory/edit/{id}(id=${subCategory.id})}" class="btn btn-warning btn-sm">Sửa</a>
+                        <a href="#" th:href="@{/admin/subcategory/delete/{id}(id=${subCategory.id})}" class="btn btn-danger btn-sm">Xóa</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination-container">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${page.hasPrevious() ? '' : 'disabled'}">
+                    <a class="page-link" href="#" th:href="@{/admin/subcategory(page=${page.number-1})}">&laquo;</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:classappend="${i == page.number ? 'active' : ''}">
+                    <a class="page-link" href="#" th:href="@{/admin/subcategory(page=${i})}" th:text="${i+1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${page.hasNext() ? '' : 'disabled'}">
+                    <a class="page-link" href="#" th:href="@{/admin/subcategory(page=${page.number+1})}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

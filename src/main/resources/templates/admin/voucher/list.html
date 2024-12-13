@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+<head>
+    <title>Danh sách Voucher</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h2>Danh Sách Voucher</h2>
+        
+        <!-- Form tìm kiếm -->
+<form action="#" method="get" class="mb-3">
+    <div class="row">
+        <div class="col-4">
+            <input type="text" name="keyword" class="form-control" th:value="${keyword}" placeholder="Tìm kiếm theo mã hoặc mô tả">
+        </div>
+        
+        <div class="col-2">
+            <button type="submit" class="btn btn-primary" >Tìm kiếm</button>
+        </div>
+    </div>
+</form>
+
+		<a href="#" class="btn btn-success mt-3" th:href="@{/admin/voucher/add}">Thêm Voucher</a>
+        <!-- Bảng voucher -->
+        <table class="table table-striped">
+		    <thead>
+		        <tr>	
+		            <th>#</th>
+		            <th>Mã Voucher</th>
+		            <th>Mô Tả</th>
+		            <th>Giảm Giá</th>
+		            <th>Loại Giảm Giá</th>
+		            <th>Ngày Bắt Đầu</th>
+		            <th>Ngày Kết Thúc</th>
+		            <th>Hành Động</th>
+		        </tr>
+		    </thead>
+		    <tbody>
+			    <tr th:each="voucher, iterStat : ${vouchers.content}">
+			        <td th:text="${iterStat.index + 1}"></td> <!-- Số thứ tự -->
+			        <td th:text="${voucher.code}"></td>
+			        <td th:text="${voucher.description}"></td>
+			        <td th:text="${voucher.discountValue} + '%'"></td>
+			        <td th:text="${voucher.discountType}"></td>
+			        <td th:text="${voucher.startDate}"></td>
+			        <td th:text="${voucher.endDate}"></td>
+			        <td>
+			            <a th:href="@{/admin/voucher/edit/{id}(id=${voucher.id})}" class="btn btn-warning btn-sm">Sửa</a>
+			            <a th:href="@{/admin/voucher/delete/{id}(id=${voucher.id})}" class="btn btn-danger btn-sm" 
+			            	onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">Xóa</a>
+			        </td>
+			    </tr>
+			</tbody>
+		</table>
+
+
+       <!-- Phân trang -->
+		<div class="d-flex justify-content-center">
+		    <ul class="pagination">
+		        <!-- Nút << (Trang đầu tiên) -->
+		        <li th:class="${vouchers.hasPrevious()} ? 'page-item' : 'page-item disabled'">
+		            <a class="page-link" 
+		               th:href="@{/admin/voucher(page=0, keyword=${keyword}, discountType=${discountType})}">&laquo;</a>
+		        </li>
+		
+		        <!-- Các số trang -->
+		        <li th:each="i : ${#numbers.sequence(0, vouchers.totalPages - 1)}" 
+		            th:class="${i == vouchers.number} ? 'page-item active' : 'page-item'">
+		            <a class="page-link" 
+		               th:href="@{/admin/voucher(page=${i}, keyword=${keyword}, discountType=${discountType})}" 
+		               th:text="${i + 1}"></a>
+		        </li>
+		
+		        <!-- Nút >> (Trang cuối cùng) -->
+		        <li th:class="${vouchers.hasNext()} ? 'page-item' : 'page-item disabled'">
+		            <a class="page-link" 
+		               th:href="@{/admin/voucher(page=${vouchers.totalPages - 1}, keyword=${keyword}, discountType=${discountType})}">&raquo;</a>
+		        </li>
+		    </ul>
+		</div>
+
+
+    </div>
+
+</body>
+</html>

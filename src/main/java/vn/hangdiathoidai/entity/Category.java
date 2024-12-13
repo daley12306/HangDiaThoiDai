@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,4 +18,5 @@ public class Category {
     private Long id;
     @Column(columnDefinition = "NVARCHAR(255) NOT NULL")
     private String name;
+    
 }

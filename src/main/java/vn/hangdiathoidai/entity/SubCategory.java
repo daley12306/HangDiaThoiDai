@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +20,10 @@ public class SubCategory {
     @ManyToOne
     @JoinColumn(name = "parent_id", nullable = false)
     private Category parentCategory;
+    
     @Column(columnDefinition = "NVARCHAR(255) NOT NULL")
     private String name;
+    
+    @OneToMany(mappedBy = "subCategory")
+    private List<Product> product;
 }
