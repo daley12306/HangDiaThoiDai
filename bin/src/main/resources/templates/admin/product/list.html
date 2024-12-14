@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+<head>
+    <title>Danh sách Sản phẩm</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- Form tìm kiếm sản phẩm -->
+        <form th:action="@{/admin/products}" method="get" class="mb-3 d-flex">
+            <input type="text" name="search" th:value="${search}" class="form-control me-2" placeholder="Tìm kiếm sản phẩm" style="max-width: 500px;">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </form>
+
+        <!-- Thêm sản phẩm -->
+        <a href="/admin/products/create" class="btn btn-success mb-3">Thêm sản phẩm</a>
+
+        <!-- Bảng sản phẩm -->
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Số thứ tự</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Ảnh bìa</th>
+                    <th>Danh mục</th>
+                    <th>Mô tả</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="product, iterStat : ${products.content}">
+                    <!-- Hiển thị số thứ tự -->
+                    <td th:text="${(products.number * products.size) + iterStat.index + 1}"></td>
+                    <td th:text="${product.name}"></td>
+                    <td>
+                        <img th:src="@{/uploads/{filename}(filename=${product.cover})}" 
+                             th:alt="${product.name + ' - Cover Image'}" 
+                             style="width: 100px; height: 100px;" />
+                    </td>
+                    <td th:text="${product.subCategory.name}"></td>
+                    <td th:text="${product.description}"></td>
+                    <td>
+                        <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="btn btn-warning btn-sm">Sửa</a>
+                        <a th:href="@{/admin/products/delete/{id}(id=${product.id})}" 
+						   class="btn btn-danger btn-sm" 
+						   onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
+						   Xóa
+						</a>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Phân trang -->
+        <div>
+            <ul class="pagination justify-content-center">
+                <!-- Nút << (Trang đầu tiên) -->
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/products(page=${currentPage-1}, search=${search})}">&laquo;</a>
+                </li>
+                <!-- Các số trang -->
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/admin/products(page=${i}, search=${search})}" th:text="${i + 1}"></a>
+                </li>
+                <!-- Nút >> (Trang cuối cùng) -->
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/products(page=${currentPage + 1}, search=${search})}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
