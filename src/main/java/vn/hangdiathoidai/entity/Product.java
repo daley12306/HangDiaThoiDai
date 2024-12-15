@@ -23,11 +23,7 @@ public class Product {
     private String name;
     @Column(columnDefinition = "TEXT NOT NULL")
     private String description;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ProductStatus status;
     private String cover;
-    
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(255) DEFAULT 'INACTIVE' NOT NULL")
     private ProductStatus status;
@@ -38,10 +34,6 @@ public class Product {
     private SubCategory subCategory;
     
     private Date createdAt;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ProductStatus status;
     
     @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<ProductsSku> productSkus = new ArrayList<>();

@@ -24,7 +24,7 @@
                 <label for="cover" class="form-label">Ảnh bìa</label>
                 <input type="file" class="form-control" id="cover" name="file" accept="image/*" onchange="previewImage(event)" /><br>
                 <div>
-                    <img id="preview" th:src="@{/uploads/{filename}(filename=${product.cover})}" alt="Cover" style="width: 150px; height: 150px;" />
+                    <img id="preview" th:src="@{/assets/img/products/{filename}(filename=${product.cover})}" alt="Cover" style="width: 150px; height: 150px;" />
                 </div>
                </div>
 
@@ -36,7 +36,15 @@
                     <option th:each="subCategory : ${subCategories}" th:value="${subCategory.id}" th:text="${subCategory.name}"></option>
                 </select>
             </div>
-
+			
+			<div class="mb-3">
+                    <label for="status" class="form-label">Trạng Thái</label>
+                    <select class="form-select" id="status" th:field="*{status}">
+                        <option value="ACTIVE" th:selected="${product.status == 'ACTIVE'}">Đang hoạt động</option>
+                        <option value="INACTIVE" th:selected="${product.status == 'INACTIVE'}">Ngừng hoạt động</option>
+                    </select>
+                </div>
+                
             <button type="submit" class="btn btn-primary">Cập nhật Sản phẩm</button>
             <a href="/admin/products" class="btn btn-secondary">Quay lại</a>
         </form>
