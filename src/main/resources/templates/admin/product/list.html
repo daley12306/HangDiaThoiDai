@@ -25,6 +25,7 @@
                     <th>Ảnh bìa</th>
                     <th>Danh mục</th>
                     <th>Mô tả</th>
+                    <th>Trạng thái</th>
                     <th>Hành động</th>
                 </tr>
             </thead>
@@ -34,12 +35,13 @@
                     <td th:text="${(products.number * products.size) + iterStat.index + 1}"></td>
                     <td th:text="${product.name}"></td>
                     <td>
-                        <img th:src="@{/uploads/{filename}(filename=${product.cover})}" 
+                        <img th:src="@{/assets/img/products/{filename}(filename=${product.cover})}" 
                              th:alt="${product.name + ' - Cover Image'}" 
                              style="width: 100px; height: 100px;" />
                     </td>
                     <td th:text="${product.subCategory.name}"></td>
                     <td th:text="${product.description}"></td>
+                    <td th:text="${product.status}"></td>
                     <td>
                         <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="btn btn-warning btn-sm">Sửa</a>
                         <a th:href="@{/admin/products/delete/{id}(id=${product.id})}" 
@@ -47,6 +49,7 @@
 						   onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
 						   Xóa
 						</a>
+						<a th:href="@{/admin/products/edit/sku/{id}(id=${product.id})}" class="btn btn-info btn-sm">Xem SKU</a>
 
                     </td>
                 </tr>

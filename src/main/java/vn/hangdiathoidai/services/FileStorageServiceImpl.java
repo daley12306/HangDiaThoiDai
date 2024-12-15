@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
-	 @Value("${upload.dir}")
+	 @Value("${upload.dir.product}")
 	 
 	    private String uploadDir;
 

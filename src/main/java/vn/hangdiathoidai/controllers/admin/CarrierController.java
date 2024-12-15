@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import vn.hangdiathoidai.entity.Carrier;
 import vn.hangdiathoidai.services.CarrierService;
@@ -29,7 +30,7 @@ public class CarrierController {
     public String listCarriers(@RequestParam(name = "page", defaultValue = "0") int page,
                                @RequestParam(name = "size", defaultValue = "10") int size,
                                @RequestParam(name = "keyword", defaultValue = "") String keyword,
-                               Model model, HttpSession session) {
+                               Model model, HttpSession session, HttpServletRequest request) {
         
         // Kiểm tra nếu page < 0 thì gán lại là 0
         if (page < 0) {
@@ -57,7 +58,8 @@ public class CarrierController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("totalPages", carriers.getTotalPages());
         model.addAttribute("currentPage", page);
-
+        model.addAttribute("currentUrl", request.getRequestURI());
+        
         return "admin/carrier/list";  // Trả về view list.html
     }
 
@@ -77,20 +79,15 @@ public class CarrierController {
 
         // Tính toán trang cuối cùng
         long totalCarriers = carrierService.getTotalCarriers();  // Lấy tổng số nhà vận chuyển
-        int size = 10;  // Số lượng phần tử mỗi trang (có thể lấy từ tham số hoặc mặc định)
+        int size = 10;
         int totalPages = (int) Math.ceil((double) totalCarriers / size);  // Tính tổng số trang
-
-        // Nếu tổng số phần tử chia hết cho size, trang cuối cùng là totalPages - 1
-        if (totalCarriers % size == 0 && totalCarriers > 0) {
-            totalPages--;  // Điều chỉnh trang cuối cùng nếu chia hết
-        }
         
         if (totalCarriers == 0 || totalPages >= totalPages) {
             totalPages = Math.max(totalPages - 1, 0);  // Nếu không còn phần tử hoặc trang hiện tại vượt quá tổng số trang, quay lại trang trước đó
         }
         
         // Redirect về trang cuối cùng
-        return "redirect:/admin/carrier?page=" + totalPages + "&size=" + size;  // Chuyển hướng về trang cuối
+        return "redirect:/admin/carrier?page=" + totalPages + "&size=" + size; 
     }
 
 
@@ -124,7 +121,7 @@ public class CarrierController {
         }
 
         long totalCarrier = carrierService.getTotalCarriers();  // Tổng số phần tử
-        int size = 10;  // Số lượng phần tử mỗi trang (có thể lấy từ tham số hoặc mặc định)
+        int size = 10;
         int totalPages = (int) Math.ceil((double) totalCarrier / size);  // Tính tổng số trang
         
         // Nếu số trang còn lại là 0, chuyển về trang đầu tiên

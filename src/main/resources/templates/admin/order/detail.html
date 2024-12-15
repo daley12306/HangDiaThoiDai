@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+
+<body layout:fragment="content">
+    <div id="page-content" class="page-content">
+        <div class="banner">
+                <div class="container">
+                    <h1 class="pt-5">Chi tiết đơn hàng</h1>
+                </div>
+           
+        </div>
+
+        <section id="order-details">
+            <div class="container">
+                <div class="row">
+                    <!-- Thông tin đơn hàng -->
+                    <div class="col-xs-12 col-sm-7">
+                        <div class="holder">
+                            <h5 class="mb-3">Đơn hàng của bạn</h5>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sản phẩm</th>
+                                            <th class="text-right">Tổng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="orderItems : ${orderItems}">
+                                            <td th:text="${orderItems.product.name + ' x' + orderItems.quantity}"></td>
+                                            <td class="text-right"
+                                                th:text="${#numbers.formatDecimal(orderItems.quantity * orderItems.productsSku.price, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfooter>
+                                    <tr>
+                                        <td><strong>Tổng giá trị sản phẩm</strong></td>
+                                        <td class="text-right"
+                                            th:text="${#numbers.formatDecimal(totalProductValue, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+                                    </tr>
+
+                                    
+									<tr>
+									    <td><strong>Phí vận chuyển</strong></td>
+										<td class="text-right" th:text="${#numbers.formatDecimal(shippingFee, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+									</tr>
+									
+									<tr>
+									    <td><strong>Giảm giá</strong></td>
+									    <td class="text-right" 
+									        th:text="${#numbers.formatDecimal(order.total - totalProductValue - shippingFee, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+									</tr>
+									
+									
+									<tr>
+									    <td><strong>Tổng thanh toán</strong></td>
+									    <td class="text-right font-weight-bold"
+									        th:text="${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+									</tr>
+									
+
+                                    </tfooter>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+					<!-- Thông tin vận chuyển -->
+                    <div class="col-xs-12 col-sm-5 d-flex flex-column">
+                        <h5 class="mb-3">Địa chỉ nhận hàng</h5>
+                        <div class="row border rounded p-3 mb-3">
+                            <div class="d-flex flex-column col">
+                                <h6 class="mb-1"
+                                    th:text="${selectedAddress.number + ' ' + selectedAddress.street}"></h6>
+                                <small
+                                    th:text="${selectedAddress.ward + ', ' + selectedAddress.district + ', ' + selectedAddress.province}"></small>
+                                <p class="mb-1 mt-2" th:text="${selectedAddress.phoneNumber}"></p>
+                            </div>
+                        </div>
+
+                        <h5 class="my-3">Đơn vị vận chuyển</h5>
+                        <div class="row border rounded p-3 mb-3">
+                            <div class="d-flex flex-column col">
+                                <h6 class="mb-1" th:text="${selectedCarrier.name}"></h6>
+                            </div>
+                        </div>
+
+                        <h5 class="mb-3">Phương thức thanh toán</h5>
+						<div>
+						    <p th:if="${paymentMethod == 'COD'}">
+						        Phương thức thanh toán: <strong>COD (Thanh toán khi nhận hàng)</strong>
+						    </p>
+						    <p th:if="${paymentMethod == 'VNPAY'}">
+						        Phương thức thanh toán: <strong>VNPAY</strong>
+						        <img width="50px"
+						             src="https://vinadesign.vn/uploads/thumbnails/800/2023/05/vnpay-logo-vinadesign-25-12-59-16.jpg"
+						             alt="VNPAY Logo" />
+						    </p>
+						</div>
+
+
+                    </div>
+
+                    
+                </div>
+            </div>
+            <a href="#" th:href="@{/admin/order}" class="btn btn-primary">Trở lại</a>
+        </section>
+        
+    </div>
+</body>
+</html>

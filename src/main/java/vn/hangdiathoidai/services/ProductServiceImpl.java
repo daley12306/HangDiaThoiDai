@@ -1,5 +1,6 @@
 package vn.hangdiathoidai.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,4 +74,11 @@ public class ProductServiceImpl implements ProductService {
 	public Optional<Product> findById(Long id) {
 		return productRepository.findById(id);
 	}
+
+	@Override
+	public List<Product> getLatestProducts() {
+		return productRepository.findTop10ByOrderByIdDesc();
+	}
+	
+	
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class SubCategoryController {
     public String listSubCategories(Model model,
                                      @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm,
                                      @RequestParam(value = "parentCategoryId", required = false) Long parentCategoryId,
-                                     @RequestParam(value = "page", defaultValue = "0") int page, HttpSession session) {
+                                     @RequestParam(value = "page", defaultValue = "0") int page, HttpSession session, HttpServletRequest request) {
         Pageable pageable = PageRequest.of(page, 10); // Phân trang với 10 mục mỗi trang
         
         Page<SubCategory> subCategoriesPage;
@@ -57,6 +58,8 @@ public class SubCategoryController {
         model.addAttribute("searchTerm", searchTerm);
         model.addAttribute("parentCategoryId", parentCategoryId); // Truyền ID của Parent Category vào view
         
+        model.addAttribute("currentUrl", request.getRequestURI());
+        
         return "admin/subcategory/list"; // Trả về view list.html
     }
 
@@ -73,23 +76,7 @@ public class SubCategoryController {
     @PostMapping("/add")
     public String saveSubCategory(@ModelAttribute("subCategory") SubCategory subCategory, HttpSession session) {
         subCategoryService.addSubCategory(subCategory);  // Lưu SubCategory vào cơ sở dữ liệu
-        
-        // Tính tổng số SubCategory hiện tại
-        long totalSubCategory = subCategoryService.getTotalSubCategory();
-        int size = 10;  // Số lượng phần tử mỗi trang (có thể lấy từ tham số hoặc mặc định)
-        int totalPages = (int) Math.ceil((double) totalSubCategory / size);  // Tính tổng số trang
-
-        // Nếu tổng số phần tử chia hết cho size, trang cuối cùng là totalPages - 1
-        if (totalSubCategory % size == 0 && totalSubCategory > 0) {
-            totalPages--;  // Điều chỉnh trang cuối cùng nếu chia hết
-        }
-        
-        if (totalPages == 0) {
-			totalPages = 1; // Nếu không có phần tử nào, tổng số trang là 1
-		}
-        
-        // Quay lại trang cuối cùng
-        return "redirect:/admin/subcategory?page=" + (totalPages - 1) + "&size=" + size;  // Quay lại danh sách SubCategory
+        return "redirect:/admin/subcategory"; 
     }
 
 
@@ -141,6 +128,7 @@ public class SubCategoryController {
     @PostMapping("/edit/{id}")
     public String updateSubCategory(@PathVariable Long id, @ModelAttribute SubCategory subCategory, HttpSession session) {
         subCategoryService.updateSubCategory(id, subCategory);
+        
         Integer page = (Integer) session.getAttribute("currentPage");
         if (page == null) {
             page = 0;  // Nếu không có trang hiện tại, mặc định là trang đầu tiên
@@ -156,10 +144,7 @@ public class SubCategoryController {
         int size = 10;  // Số lượng phần tử mỗi trang (có thể lấy từ tham số hoặc mặc định)
         int totalPages = (int) Math.ceil((double) totalSubCategory / size);  // Tính tổng số trang
 
-        // Nếu tổng số phần tử chia hết cho size, trang cuối cùng là totalPages - 1
-        if (totalSubCategory % size == 0 && totalSubCategory > 0) {
-            totalPages--;  // Điều chỉnh trang cuối cùng nếu chia hết
-        }
+        
         
         // Quay lại trang cuối cùng
 		if (totalPages == 0) {

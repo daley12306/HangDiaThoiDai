@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Dashboard</title>
+</head>
+<body>
+    <!-- Sử dụng Layout chung -->
+    <div layout:fragment="content">
+        <h2>Dashboard</h2>
+
+        <!-- Thống kê -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Số Lượng Người Dùng</div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${totalUsers}">0</h5>
+                        <p class="card-text">Tổng số người dùng trong hệ thống.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-header">Số Lượng Sản Phẩm</div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${totalProducts}">0</h5>
+                        <p class="card-text">Tổng số sản phẩm hiện có trong cửa hàng.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-header">Số Lượng Đơn Hàng</div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${totalOrders}">0</h5>
+                        <p class="card-text">Tổng số đơn hàng đã được tạo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+		    <div class="col-md-6">
+		        <div class="card">
+		            <div class="card-header">Sản Phẩm Mới Nhất</div>
+		            <div class="card-body">
+		                <ul class="list-group">
+		                    <li class="list-group-item" th:each="product : ${latestProducts}">
+		                        <span th:text="${product.name}">Sản phẩm 1</span> - 
+		                        <span th:text="${product.createdAt}">2024-12-13</span>
+		                    </li>
+		                </ul>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+
+    </div>
+
+    <!-- Nhúng Script để vẽ biểu đồ (nếu có sử dụng Chart.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Biểu đồ ví dụ (sử dụng Chart.js)
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',  // Có thể thay đổi kiểu biểu đồ (line, bar, pie, v.v.)
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May'],  // Dữ liệu cho trục x
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: [10, 20, 30, 40, 50],  // Dữ liệu doanh thu
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
