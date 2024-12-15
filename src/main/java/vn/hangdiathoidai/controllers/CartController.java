@@ -29,9 +29,6 @@ public class CartController {
 	@Autowired
 	CartItemService cartItemService;
 	
-	@Autowired
-	VoucherService voucherService;
-	
 	@GetMapping("")
 	public String cart(Model model) {
 		// User by default
@@ -49,22 +46,6 @@ public class CartController {
 		cart.setTotal(cart.getTotal() - cartItem.getProductsSku().getPrice() * cartItem.getQuantity());
 		cartService.save(cart);
 		cartItemService.deleteById(id);
-		return "redirect:/cart";
-	}
-	
-	@PostMapping("/voucher")
-	public String applyVoucher(RedirectAttributes redirectAttributes, @RequestParam String voucherCode) {
-		Voucher voucher = voucherService.findByCode(voucherCode);
-		if (voucherCode.isEmpty()) {
-			redirectAttributes.addFlashAttribute("message", "Vui lòng nhập mã giảm giá");
-			return "redirect:/cart";
-		}
-		else if (voucher == null) {
-			redirectAttributes.addFlashAttribute("message", "Mã giảm giá không tồn tại");
-			return "redirect:/cart";
-		}
-		Cart cart = cartService.findByUserId(2L).get();
-		redirectAttributes.addFlashAttribute("discountValue", (int)(voucher.getDiscountValue() * cart.getTotal() / 100));
 		return "redirect:/cart";
 	}
 }

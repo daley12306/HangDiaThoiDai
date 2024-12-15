@@ -9,14 +9,16 @@ import vn.hangdiathoidai.enums.OrderStatus;
 
 public interface OrderDetailService {
 
+	OrderDetail findById(Long id);
+
+	Page<OrderDetail> findOrdersByCustomerName(String keyword, int page, int size);
+
 	void updateOrderStatus(Long id, OrderStatus status);
 
 	OrderDetail getOrderById(Long id);
 
 	List<OrderDetail> getAllOrders();
 
-	Page<OrderDetail> findOrdersByCustomerName(String keyword, int page, int size);
-
-	OrderDetail findById(Long id);
+	<S extends OrderDetail> S save(S entity);
 
 }

@@ -26,6 +26,11 @@ public class Product {
     
     private String cover;
     
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'INACTIVE' NOT NULL")
+    private ProductStatus status;
+
+    
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private SubCategory subCategory;

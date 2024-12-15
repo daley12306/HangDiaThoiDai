@@ -55,4 +55,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 		public OrderDetail findById(Long id) {
 			return orderDetailRepository.findById(id).orElse(null);
 		}
+
+		@Override
+		public <S extends OrderDetail> S save(S entity) {
+			return orderDetailRepository.save(entity);
+		}
 }
