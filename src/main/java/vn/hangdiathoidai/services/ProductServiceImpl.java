@@ -1,5 +1,6 @@
 package vn.hangdiathoidai.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import vn.hangdiathoidai.entity.Product;
+import vn.hangdiathoidai.enums.ProductStatus;
 import vn.hangdiathoidai.repository.ProductRepository;
 
 @Service
@@ -73,4 +75,17 @@ public class ProductServiceImpl implements ProductService {
 	public Optional<Product> findById(Long id) {
 		return productRepository.findById(id);
 	}
+    @Override
+    public List<Product> getProducts() {
+        return productRepository.findAll();
+    }
+    public List<Product> getActiveProducts() {
+        return productRepository.findAllByStatus(ProductStatus.ACTIVE);
+    }
+
+    @Override
+    public List<Product> findAllBySubCategoryIdAndStatus(Long category_id, ProductStatus status) {
+        return productRepository.findAllBySubCategoryIdAndStatus(category_id, status);
+    }
+
 }

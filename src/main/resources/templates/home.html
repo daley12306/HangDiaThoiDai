@@ -3,13 +3,57 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout.html}">
 <head>
-<meta charset="UTF-8">
-<title>Homepage</title>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+
+    <style>
+        .product-container {
+            display: flex;
+            overflow-x: auto; /* Cho phép cuộn ngang */
+            padding: 10px 0; /* Thêm khoảng cách trên và dưới */
+        }
+        .product-card {
+            min-width: 300px; /* Đặt chiều rộng tối thiểu cho thẻ sản phẩm */
+            margin-right: 15px; /* Khoảng cách giữa các thẻ */
+        }
+        .product-card:last-child {
+            margin-right: 0; /* Không có khoảng cách bên phải cho thẻ cuối cùng */
+        }
+    </style>
 </head>
 
 <body layout:fragment="content">
-<h1>This is home page.</h1>
-<button class="btn btn-primary">Hello</button>
+<div class="container">
+    <img src="/assets/img/home.png" alt="home-pic" class="img-fluid mb-4" style="width: 100%; max-width: 1200px;">
+    <h2 class="text-primary text-center">CÁC SẢN PHẨM ĐANG Ở TRÊN SÀN</h2>
 
+    <div class="container mt-5">
+        <div class="product-container">
+            <div class="product-card" th:each="product : ${products}">
+                <div class="card h-100">
+                    <!-- Hình ảnh sản phẩm -->
+                    <img th:src="@{/assets/img/products/{file}(file=${product.cover})}"
+                         class="card-img-top" style="height: 200px; object-fit: cover;" alt="Product Image">
+                    <!-- Nội dung card -->
+                    <div class="card-body d-flex flex-column">
+                        <!-- Tên sản phẩm -->
+                        <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                        <!-- Mô tả sản phẩm -->
+                        <p class="card-text" th:text="${product.description}">Product Description</p>
+                    </div>
+                    <!-- Footer của card -->
+                    <div class="card-footer bg-white border-0 mt-auto">
+                        <a th:href="@{|/product/${product.id}|}" class="btn btn-primary w-100">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

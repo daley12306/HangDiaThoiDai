@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.hangdiathoidai.enums.ProductStatus;
 
 import java.util.Date;
 
@@ -19,7 +20,9 @@ public class Product {
     private String name;
     @Column(columnDefinition = "TEXT NOT NULL")
     private String description;
-    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProductStatus status;
     private String cover;
     
     @ManyToOne
