@@ -9,5 +9,5 @@ public interface CartService {
 	
 	<S extends Cart> S save(S entity);
 	
-	void deleteById(Long id);
+	void deleteByCartId(Long id);
 }

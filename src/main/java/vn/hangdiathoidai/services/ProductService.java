@@ -26,10 +26,13 @@ public interface ProductService {
 
 	Optional<Product> findById(Long id);
 
-
-    List<Product> getProducts();
+  List<Product> getProducts();
+  
 	List<Product> getActiveProducts();
 
-    List<Product> findAllBySubCategoryIdAndStatus(Long category_id, ProductStatus status);
+  List<Product> findAllBySubCategoryIdAndStatus(Long category_id, ProductStatus status);
+  
 	List<Product> getTopSellingProducts(int limit);
+
+	List<Product> getLatestProducts();
 }

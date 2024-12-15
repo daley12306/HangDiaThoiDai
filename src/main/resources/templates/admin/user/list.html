@@ -36,7 +36,7 @@
             <tr th:each="user, iterStat : ${users.content}">
                 <td th:text="${(users.number * users.size) + iterStat.index + 1}"></td>
                 <td>
-                    <img th:src="@{/uploads/{filename}(filename=${user.avatar})}" alt="Avatar" style="width: 100px; height: 100px;" />
+                    <img th:src="@{/assets/img/avatar/{filename}(filename=${user.avatar})}" alt="Avatar" style="width: 100px; height: 100px;" />
                 </td>
                 <td th:text="${user.fullName}"></td>
                 <td th:text="${user.email}"></td>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+<head>
+    <title>Quản lý Đơn Hàng</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Danh Sách Đơn Hàng</h1>
+	<form th:action="@{/admin/order}" method="get" class="mb-3 d-flex ">
+	    <input type="text" name="keyword" class="form-control me-2" 
+	           placeholder="Tìm kiếm theo tên khách hàng" style="max-width: 500px;" th:value="${keyword}">
+	    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+	</form>
+	<!-- Thông báo lỗi -->
+	<div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+	    <span th:text="${errorMessage}"></span>
+	</div>
+	
+	<!-- Thông báo thành công -->
+	<div th:if="${successMessage}" class="alert alert-success" role="alert">
+	    <span th:text="${successMessage}"></span>
+	</div>
+	
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Khách Hàng</th>
+                <th>Tổng Tiền</th>
+                <th>Trạng Thái</th>
+                <th>Vận Chuyển</th>
+                <th>Chỉnh Sửa Trạng Thái</th>
+                <th>Xem thông tin</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.user.fullName}"></td>
+                <td th:text="${order.total} + 'đ'"></td>
+                <td th:text="${order.status}"></td>
+                <td th:text="${order.carrier.name}"></td>
+                <td>
+                    <form th:action="@{/admin/order/update-status/{id}(id=${order.id})}" method="post" class="d-flex align-items-center">
+					    <select class="form-select" id="status" name="status" style="font-size: 14px; width: 150px;">
+					    	<option value="" disabled selected>--Trạng thái--</option>
+						    <option th:value="PENDING" th:selected="${order.status == 'PENDING'}">PENDING</option>
+						    <option th:value="PROCESSING" th:selected="${order.status == 'PROCESSING'}">PROCESSING</option>
+						    <option th:value="SHIPPED" th:selected="${order.status == 'SHIPPED'}">SHIPPED</option>
+						    <option th:value="DELIVERED" th:selected="${order.status == 'DELIVERED'}">DELIVERED</option>
+						    <option th:value="CANCELLED" th:selected="${order.status == 'CANCELLED'}">CANCELLED</option>
+						    <option th:value="REFUNDED" th:selected="${order.status == 'REFUNDED'}">REFUNDED</option>
+						</select>
+						
+					    <button type="submit" class="btn btn-primary ms-2">Cập nhật</button>
+					    
+					   
+					</form>
+				
+                </td>
+                <td>
+                    <a th:href="@{/admin/order/detail/{id}(id=${order.id})}" class="btn btn-info btn-sm">Xem</a>
+                    </td>
+            </tr>
+        </tbody>
+    </table>
+    <nav>
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+            <a class="page-link" th:href="@{/admin/order(page=${currentPage - 1}, keyword=${keyword})}">Trước</a>
+        </li>
+
+        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+            th:classappend="${pageNum == currentPage} ? 'active'">
+            <a class="page-link" th:href="@{/admin/order(page=${pageNum}, keyword=${keyword})}"
+               th:text="${pageNum + 1}"></a>
+        </li>
+
+        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+            <a class="page-link" th:href="@{/admin/order(page=${currentPage + 1}, keyword=${keyword})}">Sau</a>
+        </li>
+    </ul>
+</nav>
+    
+    </div>
+</body>
+</html>

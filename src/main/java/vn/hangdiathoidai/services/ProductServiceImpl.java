@@ -80,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
 	public Optional<Product> findById(Long id) {
 		return productRepository.findById(id);
 	}
+  
     @Override
     public List<Product> getProducts() {
         return productRepository.findAll();
@@ -112,4 +113,10 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
     }
 
+
+	@Override
+	public List<Product> getLatestProducts() {
+		return productRepository.findTop10ByOrderByIdDesc();
+	}
+	
 }

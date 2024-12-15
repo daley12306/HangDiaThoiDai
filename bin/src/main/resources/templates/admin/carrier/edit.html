@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+<head>
+    <title>Sửa Nhà Vận Chuyển</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <h1>Sửa Nhà Vận Chuyển</h1>
+            <form th:action="@{/admin/carrier/edit/{id}(id=${carrier.id})}" th:object="${carrier}" method="post">
+                <!-- Tên nhà vận chuyển -->
+                <div class="mb-3">
+                    <label for="name" class="form-label">Tên Nhà Vận Chuyển</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Nhập tên nhà vận chuyển" required>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Nhập email" required>
+                </div>
+
+                <!-- Phí vận chuyển -->
+                <div class="mb-3">
+                    <label for="shippingFee" class="form-label">Phí Vận Chuyển</label>
+                    <input type="number" class="form-control" id="shippingFee" th:field="*{shippingFee}" placeholder="Nhập phí vận chuyển" required>
+                </div>
+
+                <!-- Trạng thái -->
+                <div class="mb-3">
+                    <label for="status" class="form-label">Trạng Thái</label>
+                    <select class="form-select" id="status" th:field="*{status}">
+                        <option value="ACTIVE" th:selected="${carrier.status == 'ACTIVE'}">Đang hoạt động</option>
+                        <option value="INACTIVE" th:selected="${carrier.status == 'INACTIVE'}">Ngừng hoạt động</option>
+                    </select>
+                </div>
+
+                <!-- Nút submit -->
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                <a href="/admin/carrier" class="btn btn-secondary">Quay lại</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

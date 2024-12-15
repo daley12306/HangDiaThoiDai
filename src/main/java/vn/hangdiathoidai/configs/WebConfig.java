@@ -10,8 +10,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Cấu hình để phục vụ hình ảnh từ thư mục uploads
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:./uploads/");
+        registry.addResourceHandler("/avatar/**")
+                .addResourceLocations("file:/src/main/resources/static/assets/img/avatar/");
+        registry.addResourceHandler("/products/**")
+        		.addResourceLocations("file:/src/main/resources/static/assets/img/products/");
     }
 }
 
