@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.hangdiathoidai.entity.Review;
+import vn.hangdiathoidai.entity.User;
 import vn.hangdiathoidai.services.ProductService;
 import vn.hangdiathoidai.services.ReviewService;
 
@@ -38,6 +39,9 @@ public class ReviewController {
         review.setRating(rating);
         review.setReviewText(reviewText);
         review.setCreatedAt(new Date());
+        User user = new User();
+        user.setId(2L); // Giả sử user đăng nhập có id là 2
+        review.setUser(user);
 
         reviewService.saveReview(review);
 

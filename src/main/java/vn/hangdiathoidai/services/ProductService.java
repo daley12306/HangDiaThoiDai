@@ -31,4 +31,5 @@ public interface ProductService {
 	List<Product> getActiveProducts();
 
     List<Product> findAllBySubCategoryIdAndStatus(Long category_id, ProductStatus status);
+	List<Product> getTopSellingProducts(int limit);
 }
