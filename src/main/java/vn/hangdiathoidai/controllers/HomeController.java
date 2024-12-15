@@ -53,10 +53,14 @@ public class HomeController {
 		List<Product> cassetteProducts = productService.findAllBySubCategoryIdAndStatus(3L,ProductStatus.ACTIVE);
 		List<Product> vinylProducts = productService.findAllBySubCategoryIdAndStatus(2L,ProductStatus.ACTIVE);
 
+		// Lấy top 5 sản phẩm bán chạy
+		List<Product> topSellingProducts = productService.getTopSellingProducts(5);
+
 		model.addAttribute("cdProducts", cdProducts);
 		model.addAttribute("cassetteProducts", cassetteProducts);
 		model.addAttribute("vinylProducts", vinylProducts);
-
+		model.addAttribute("topSellingProducts", topSellingProducts); // Truyền vào model
 		return "shop";
 	}
+
 }

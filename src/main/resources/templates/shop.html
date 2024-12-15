@@ -24,7 +24,24 @@
 <body layout:fragment="content">
 <div class="container">
     <img src="/assets/img/home.png" alt="shop-banner" style="width: 1200px; display: block; margin-bottom: 50px;">
-    <h2 class="text-primary text-center">CÁC SẢN PHẨM SHOP</h2>
+
+    <!-- Top Selling Products -->
+    <h3 class="text-center text-primary mb-4">Top 5 Sản Phẩm Bán Chạy</h3>
+    <div class="product-container">
+        <div class="product-card" th:each="product : ${topSellingProducts}">
+            <div class="card" style="height: 300px;">
+                <img th:src="@{/assets/img/products/{file}(file=${product.cover})}" class="card-img-top"
+                     style="height: 150px; object-fit: cover;" alt="Top Product">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="card-title text-center text-truncate" th:text="${product.name}">CD Name</h5>
+                    <p class="card-text text-truncate text-center" style="max-height: 50px;" th:text="${product.description}">CD Description</p>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <a th:href="@{|/product/${product.id}|}" class="btn btn-primary w-100">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Danh mục CD -->
     <div class="container mt-5">
