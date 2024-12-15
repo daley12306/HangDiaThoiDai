@@ -21,14 +21,22 @@
                 <img id="preview" src="#" alt="Preview" style="display: none; width: 150px; height: 150px;" />
             </div>
             
-            <div class="mb-3">
-                <label for="subCategory" class="form-label">Danh mục</label>
-                <select class="form-select" id="subCategory" th:field="*{subCategory.id}" required>
-                    <option value="">--Chọn danh mục--</option>
-                    <option th:each="subCategory : ${subCategories}" th:value="${subCategory.id}" th:text="${subCategory.name}"></option>
-                </select>
-	            </div>
-
+             <div class="form-group">
+		        <label for="subCategory">Chọn SubCategory</label>
+		        <select id="subCategory" name="subCategory" class="form-control">
+		            <option value="">--Chọn SubCategory--</option>
+		            <!-- Hiển thị SubCategory theo nhóm Category -->
+		            <th:block th:each="entry : ${groupedSubCategories}">
+		                <optgroup th:label="${entry.key}">
+		                    <option th:each="subCategory : ${entry.value}" 
+		                            th:value="${subCategory.id}" 
+		                            th:text="${subCategory.name}">
+		                    </option>
+		                </optgroup>
+		            </th:block>
+		        </select>
+		    </div>
+		    <br>
             <div class="mb-3">
                 <label for="description" class="form-label">Mô tả</label>
                 <textarea class="form-control" id="description" th:field="*{description}" placeholder="Nhập mô tả sản phẩm" required></textarea>

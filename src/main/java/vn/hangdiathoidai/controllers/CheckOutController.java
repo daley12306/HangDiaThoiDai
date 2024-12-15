@@ -183,6 +183,8 @@ public class CheckOutController {
 			List<CartItem> cartItems = cartItemService.findByCartId(cart.getId());
 			
 			int randomId = new Random().nextInt(999999);
+			int discountProduct = (int) session.getAttribute("discountProduct");
+			int discountShipping = (int) session.getAttribute("discountShipping");
 			
 			OrderDetail order = new OrderDetail();
 			BeanUtils.copyProperties(cart, order);
@@ -191,7 +193,7 @@ public class CheckOutController {
 			order.setPaymentMethod(model.getAttribute("paymentMethod") != null ? (PaymentMethod) model.getAttribute("paymentMethod") : PaymentMethod.COD);
 			order.setCarrier((Carrier) session.getAttribute("selectedCarrier"));
 			order.setAddress((Address) session.getAttribute("selectedAddress"));
-			
+			order.setTotal(cart.getTotal() - discountProduct - discountShipping);			
 			order = orderDetailService.save(order);
 			
 			for (CartItem cartItem : cartItems) {
