@@ -17,7 +17,6 @@ public class OrderItemServiceImpl implements OrderItemService {
 	public List<OrderItem> getItemsByOrderId(Long orderId) {
         return orderItemRepository.findByOrder_Id(orderId);
     }
-
 	@Override
 	public <S extends OrderItem> S save(S entity) {
 		return orderItemRepository.save(entity);

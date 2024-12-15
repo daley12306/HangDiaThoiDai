@@ -28,13 +28,15 @@ public class OrderDetail {
     @OneToOne
     @JoinColumn(name = "carrier_id", nullable = false)
     private Carrier carrier;
+    
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
+    
     @OneToOne
     @JoinColumn(name = "address_id", nullable = false)
     private Address address;
+    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentMethod paymentMethod;
-
 }

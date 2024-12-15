@@ -96,4 +96,9 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 		public List<SubCategory> findByParentCategoryId(Long categoryId) {
 			return subCategoryRepository.findByParentCategoryId(categoryId);
 		}
+		
+		 @Override
+		public List<SubCategory> getAllSortedSubCategories() {
+		        return subCategoryRepository.findAllByOrderByParentCategoryNameAscNameAsc();
+		    }
 }

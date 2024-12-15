@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import vn.hangdiathoidai.entity.OrderDetail;
@@ -39,7 +40,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
 		@Override
 		public Page<OrderDetail> findOrdersByCustomerName(String keyword, int page, int size) {
-			Pageable pageable = PageRequest.of(page, size);
+			Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
 	        if (keyword == null || keyword.isEmpty()) {
 	            // Nếu không có từ khóa, trả về tất cả đơn hàng
@@ -59,6 +60,4 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 		public <S extends OrderDetail> S save(S entity) {
 			return orderDetailRepository.save(entity);
 		}
-		
-		
 }

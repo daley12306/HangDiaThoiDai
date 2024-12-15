@@ -1,5 +1,6 @@
 package vn.hangdiathoidai.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -24,5 +25,7 @@ public interface ProductService {
 
 	Optional<Product> findById(Long id);
 
+	List<Product> getLatestProducts();
+	
 	
 }
