@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 
 import vn.hangdiathoidai.entity.Product;
+import vn.hangdiathoidai.enums.ProductStatus;
 
 public interface ProductService {
 
@@ -25,7 +26,13 @@ public interface ProductService {
 
 	Optional<Product> findById(Long id);
 
+  List<Product> getProducts();
+  
+	List<Product> getActiveProducts();
+
+  List<Product> findAllBySubCategoryIdAndStatus(Long category_id, ProductStatus status);
+  
+	List<Product> getTopSellingProducts(int limit);
+
 	List<Product> getLatestProducts();
-	
-	
 }

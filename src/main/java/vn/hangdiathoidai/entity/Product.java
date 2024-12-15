@@ -23,7 +23,9 @@ public class Product {
     private String name;
     @Column(columnDefinition = "TEXT NOT NULL")
     private String description;
-    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProductStatus status;
     private String cover;
     
     @Enumerated(EnumType.STRING)
