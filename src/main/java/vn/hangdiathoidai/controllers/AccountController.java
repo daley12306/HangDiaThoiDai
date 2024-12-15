@@ -64,15 +64,6 @@ public class AccountController {
 	public String address(ModelMap model, @RequestParam(required = false) Long selectedId) {
 		List<Address> addresses = addressService.findByUserId(2L);
 		model.addAttribute("addresses", addresses);
-		
-        if (selectedId != null) {
-            Address selectedAddress = addressService.findById(selectedId)
-                    .orElse(new Address());
-            model.addAttribute("selectedAddress", selectedAddress);
-        } else {
-            model.addAttribute("selectedAddress", new Address());
-        }
-		
 		return "user/address";
 	}
 	

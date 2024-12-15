@@ -16,7 +16,7 @@
 
 		<section id="cart">
 			<div class="container">
-				<div th:if="${cartItems}" class="row">
+				<div th:if="${cartItems.size() > 0}" class="row">
 					<div class="col-md-12">
 						<div class="table-responsive">
 							<table class="table">
@@ -50,38 +50,21 @@
 						</div>
 					</div>
 					<div class="col">
-						<a href="shop.html" class="btn btn-default">Tiếp tục mua sắm</a>
+						<a href="/shop" class="btn btn-default">Tiếp tục mua sắm</a>
 					</div>
 					<div class="col text-right">
-						<form action="/cart/voucher" method="post">
-							<div class="input-group w-50 float-right">
-								<input class="form-control" placeholder="Mã giảm giá"
-									type="text" name="voucherCode">
-								<div class="input-group-append">
-									<button class="btn btn-default" type="submit">Áp dụng</button>
-								</div>
-							</div>
-						</form>
-						<div class="clearfix"></div>
-						<p class="mt-3" th:text="${message}"></p>
-						<div th:if="${discountValue}">
-							<p class="mt-3">
-								Tổng tiền hàng: <span th:text="${#numbers.formatDecimal(cart.total, 0, 'COMMA', 0, 'POINT')} + '₫'"></span>
-							</p>
-							<p class="mt-3">
-								Khuyến mãi: <span th:text="${#numbers.formatDecimal(discountValue, 0, 'COMMA', 0, 'POINT')} + '₫'"></span>
-							</p>
-							<h6 class="mt-3"
-								th:text="'Tổng thanh toán: ' + ${#numbers.formatDecimal(cart.total - discountValue, 0, 'COMMA', 0, 'POINT')} + '₫'"></h6>
-						</div>
-						<h6 th:unless="${discountValue}" class="mt-3"
-							th:text="'Tổng thanh toán: ' + ${#numbers.formatDecimal(cart.total, 0, 'COMMA', 0, 'POINT')} + '₫'"></h6>
-						<a href="checkout.html" class="btn btn-lg btn-primary">Thanh
+						<h6 class="mt-3"
+							th:text="'Tổng: ' + ${#numbers.formatDecimal(cart.total, 0, 'COMMA', 0, 'POINT')} + '₫'"></h6>
+						<a href="/checkout" class="btn btn-lg btn-primary">Thanh
 							toán <i class="fa fa-long-arrow-right"></i>
 						</a>
 					</div>
 				</div>
-				<h6 th:unless="${cartItems}">Giỏ hàng bạn đang trống</h6>
+				<div th:unless="${cartItems.size() > 0}" class="col-xs-12 col-sm-7 m-auto text-center">
+					<i class="fa fa-shopping-cart fa-4x text-primary mb-3"></i>
+					<h5>Giỏ hàng của bạn đang trống</h5>
+					<p>Hãy chọn sản phẩm bạn muốn mua và thêm vào giỏ hàng nhé!</p>
+				</div>
 			</div>
 		</section>
 	</div>

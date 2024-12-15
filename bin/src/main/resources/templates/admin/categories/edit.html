@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+<head>
+    <title>Sửa Category</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <h1 class="mb-4">Sửa Category</h1>
+
+            <!-- Form để sửa Category -->
+            <form th:action="@{/admin/categories/edit/{id}(id=${category.id})}" th:object="${category}" method="post">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" th:field="*{name}" class="form-control" required>
+                </div><br>
+
+                
+            </form>
+			<button type="submit" class="btn btn-primary">Cập nhật</button>
+            <a href="/admin/categories" class="btn btn-secondary ">Quay lại</a>
+        </div>
+    </div>
+</body>
+</html>

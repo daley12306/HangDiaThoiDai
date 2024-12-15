@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.hangdiathoidai.enums.ProductStatus;
 
 import java.util.Date;
 
@@ -21,6 +22,11 @@ public class Product {
     private String description;
     
     private String cover;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'INACTIVE' NOT NULL")
+    private ProductStatus status;
+
     
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
