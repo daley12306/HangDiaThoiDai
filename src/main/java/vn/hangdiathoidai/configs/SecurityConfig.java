@@ -45,7 +45,7 @@ public class SecurityConfig {
                        .anyRequest().authenticated()
                        
 				)
-				.formLogin(Customizer.withDefaults())
+				.formLogin(login -> login.loginPage("/login").permitAll())
 				.build();
 	}
 }

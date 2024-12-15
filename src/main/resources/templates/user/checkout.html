@@ -44,15 +44,18 @@
 									</tr>
 									<tr>
 										<td><strong>Vận chuyển</strong></td>
-										<td class="text-right" th:text="${#numbers.formatDecimal(selectedCarrier.shippingFee, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+										<td class="text-right"
+											th:text="${#numbers.formatDecimal(selectedCarrier.shippingFee, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
 									</tr>
 									<tr th:if="${discountProduct != 0}">
 										<td><strong>Giảm giá sản phẩm</strong></td>
-										<td class="text-right" th:text="${'-' + #numbers.formatDecimal(discountProduct, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+										<td class="text-right"
+											th:text="${'-' + #numbers.formatDecimal(discountProduct, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
 									</tr>
 									<tr th:if="${discountShipping != 0}">
 										<td><strong>Giảm giá vận chuyển</strong></td>
-										<td class="text-right" th:text="${'-' + #numbers.formatDecimal(discountShipping, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+										<td class="text-right"
+											th:text="${'-' + #numbers.formatDecimal(discountShipping, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
 									</tr>
 									<tr>
 										<td><strong>TỔNG THANH TOÁN</strong></td>
@@ -99,23 +102,27 @@
 							</div>
 						</form>
 						<h5 class="mb-3">Phương thức thanh toán</h5>
-						<div class="form-check-inline">
-							<label class="form-check-label"> <input
-								class="form-check-input" type="radio" name="exampleRadios"
-								id="exampleRadios1" value="COD" checked> Thanh toán
-								khi nhận hàng
-							</label>
-						</div>
-						<div class="form-check-inline">
-							<label class="form-check-label"> <input
-								class="form-check-input" type="radio" name="exampleRadios"
-								id="exampleRadios2" value="VNPAY"> VNPAY
-							</label> <img width="50px"
-								src="https://vinadesign.vn/uploads/thumbnails/800/2023/05/vnpay-logo-vinadesign-25-12-59-16.jpg" />
-						</div>
-						<a href="#" class="btn btn-primary float-right">THANH TOÁN <i
-							class="fa fa-check"></i>
-						</a>
+						<form action="/checkout/submit" method="post" class="d-flex flex-column">
+							<div class="form-check-inline">
+								<label class="form-check-label"> <input
+									class="form-check-input" type="radio" name="paymentMethod"
+									id="exampleRadios1" value="COD" checked> Thanh toán khi
+									nhận hàng
+								</label>
+							</div>
+							<div class="form-check-inline">
+								<label class="form-check-label"> <input
+									class="form-check-input" type="radio" name="paymentMethod"
+									id="exampleRadios2" value="VNPAY"> VNPAY
+								</label> <img width="50px"
+									src="https://vinadesign.vn/uploads/thumbnails/800/2023/05/vnpay-logo-vinadesign-25-12-59-16.jpg" />
+							</div>
+							<div class="form-check-inline">
+								<button type="submit" class="btn btn-primary float-right">
+									THANH TOÁN <i class="fa fa-check"></i>
+								</button>
+							</div>
+						</form>
 					</div>
 				</div>
 		</section>
@@ -180,8 +187,7 @@
 					</div>
 					<div class="modal-body">
 						<ul class="list-group list-group-flush">
-							<li class="list-group-item"
-								th:each="carrier, stat : ${carriers}">
+							<li class="list-group-item" th:each="carrier, stat : ${carriers}">
 								<div class="d-flex w-100 row">
 									<div class="d-flex flex-column col">
 										<h6 class="mb-1" th:text="${carrier.name}"></h6>

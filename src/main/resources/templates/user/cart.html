@@ -16,7 +16,7 @@
 
 		<section id="cart">
 			<div class="container">
-				<div th:if="${cartItems}" class="row">
+				<div th:if="${cartItems.size() > 0}" class="row">
 					<div class="col-md-12">
 						<div class="table-responsive">
 							<table class="table">
@@ -60,7 +60,11 @@
 						</a>
 					</div>
 				</div>
-				<h6 th:unless="${cartItems}" class="m-5">Giỏ hàng bạn đang trống</h6>
+				<div th:unless="${cartItems.size() > 0}" class="col-xs-12 col-sm-7 m-auto text-center">
+					<i class="fa fa-shopping-cart fa-4x text-primary mb-3"></i>
+					<h5>Giỏ hàng của bạn đang trống</h5>
+					<p>Hãy chọn sản phẩm bạn muốn mua và thêm vào giỏ hàng nhé!</p>
+				</div>
 			</div>
 		</section>
 	</div>
