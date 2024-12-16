@@ -60,6 +60,11 @@ public class UserServiceImpl implements UserService {
 	public long getTotalUsers() {
 		return userRepository.count();
 	}
+	
+	@Override
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
 }
 
 		

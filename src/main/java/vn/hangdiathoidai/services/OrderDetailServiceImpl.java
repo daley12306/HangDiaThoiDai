@@ -60,4 +60,20 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 		public <S extends OrderDetail> S save(S entity) {
 			return orderDetailRepository.save(entity);
 		}
+
+		@Override
+		public long getTotalOrders() {
+			return orderDetailRepository.count();
+		}
+
+		@Override
+		public Page<OrderDetail> findOrders(int page, int size) {
+			return orderDetailRepository.findAll(PageRequest.of(page, size));
+		}
+		
+		@Override
+		public Page<OrderDetail> findOrdersByUserId(Long userId, int page, int size) {
+	        Pageable pageable = PageRequest.of(page, size); // Sắp xếp giảm dần theo ID
+	        return orderDetailRepository.findByUserId(userId, pageable);
+	    }
 }

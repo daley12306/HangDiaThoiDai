@@ -9,5 +9,6 @@ import vn.hangdiathoidai.entity.OrderDetail;
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
 
 	Page<OrderDetail> findByUser_FullNameContainingIgnoreCase(String keyword, Pageable pageable);
+	Page<OrderDetail> findByUserId(Long userId, Pageable pageable);
 
 }

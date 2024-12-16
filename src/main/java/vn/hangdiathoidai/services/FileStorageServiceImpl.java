@@ -11,9 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
-	 @Value("${upload.dir.product}")
-	 
-	    private String uploadDir;
+	 @Value("${upload.dir}")
+	 private String uploadDir;
 
 	 public String saveFile(MultipartFile file) throws IOException {
 	        // Tạo thư mục nếu chưa tồn tại

@@ -28,7 +28,7 @@
 						<h5 class="mb-3">THÔNG TIN TÀI KHOẢN</h5>
 						<!-- Bill Detail of the Page -->
 						<form action="/account/profile/save" class="bill-detail"
-							method="post">
+							method="post" enctype="multipart/form-data">
 							<fieldset>
 								<div class="row">
 									<div class="col col-8">
@@ -83,10 +83,10 @@
 									</div>
 									<div class="col">
 										<div class="col d-flex flex-column">
-											<image src="/assets/img/logo/avatar.jpg" width="100%"
+											<image id="preview" th:src="@{/uploads/{filename}(filename=${user.avatar})}" alt="Avatar" width="100%"
 												class="mb-3" />
 											<label for="fileInput" class="btn btn-primary mx-5"> Chọn
-												tệp </label> <input type="file" id="fileInput" class="d-none" />
+												tệp </label> <input type="file" name="file" id="fileInput" class="d-none" accept="image/*" onchange="previewImage(event)"/>
 											<span class="text-grey">Dung lượng tối đa 1 MB</span>
 										</div>
 									</div>
@@ -103,5 +103,20 @@
 			</div>
 		</section>
 	</div>
+	<script>
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById('preview');
+            const file = input.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
 </body>
 </html>

@@ -12,7 +12,7 @@
         <!-- Hình ảnh sản phẩm -->
         <div class="col-md-6">
             <div class="border rounded p-2">
-                <img th:src="@{/assets/img/products/{file}(file=${product.cover})}" class="img-fluid" alt="Product Image">
+                <img th:src="@{/uploads/{file}(file=${product.cover})}" class="img-fluid" alt="Product Image">
             </div>
         </div>
 

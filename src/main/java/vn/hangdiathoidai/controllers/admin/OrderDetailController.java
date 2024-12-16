@@ -35,10 +35,10 @@ public class OrderDetailController {
 	        @RequestParam(value = "keyword", required = false) String keyword,
 	        @RequestParam(value = "page", defaultValue = "0") int page,
 	        @RequestParam(value = "size", defaultValue = "10") int size,
-	        Model model, HttpServletRequest request) {
+	        Model model, HttpServletRequest request, Long id) {
 	    // Lấy danh sách đơn hàng theo từ khóa (nếu có)
 	    Page<OrderDetail> orderPage = orderDetailService.findOrdersByCustomerName(keyword, page, size);
-
+	    
 	    // Thêm các thông tin vào model
 	    model.addAttribute("orders", orderPage.getContent()); // Danh sách đơn hàng trong trang hiện tại
 	    model.addAttribute("currentPage", page);
@@ -51,7 +51,7 @@ public class OrderDetailController {
 	}
 	
 	@PostMapping("/update-status/{id}")
-	public String updateOrderStatus(@PathVariable Long id, OrderStatus status, RedirectAttributes redirectAttributes, HttpSession session) {
+	public String updateOrderStatus(@PathVariable Long id,@RequestParam OrderStatus status, RedirectAttributes redirectAttributes, HttpSession session) {
 	    try {
 	        // Thực hiện cập nhật trạng thái đơn hàng
 	        orderDetailService.updateOrderStatus(id, status);
@@ -72,12 +72,7 @@ public class OrderDetailController {
 	@GetMapping("/detail/{id}")
 	public String viewOrderDetails(@PathVariable Long id, ModelMap model) {
         // Lấy thông tin chi tiết đơn hàng theo ID
-		// Lấy thông tin chi tiết đơn hàng
         OrderDetail order = orderDetailService.getOrderById(id);
-		/*
-		 * if (order == null) { model.addAttribute("error", "Không tìm thấy đơn hàng.");
-		 * return "redirect:/admin/orders"; }
-		 */
 
         // Lấy danh sách OrderItem liên quan đến OrderDetail
         List<OrderItem> orderItems = orderItemService.getItemsByOrderId(id);

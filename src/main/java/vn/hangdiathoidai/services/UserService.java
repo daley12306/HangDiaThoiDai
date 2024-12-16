@@ -22,6 +22,8 @@ public interface UserService {
 
 	long getTotalUsers();
 
+	User findByUsername(String username);
+
 
 	
 }

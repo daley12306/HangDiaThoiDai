@@ -95,7 +95,7 @@ public class CarrierController {
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         carrierService.getCarrierById(id).ifPresent(carrier -> model.addAttribute("carrier", carrier));
-        return "admin/carrier/edit";  // Đường dẫn đến file edit.html là admin/carrier/edit
+        return "admin/carrier/edit"; 
     }
 
     // Cập nhật Carrier

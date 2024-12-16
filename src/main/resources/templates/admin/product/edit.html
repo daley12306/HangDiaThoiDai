@@ -24,7 +24,7 @@
                 <label for="cover" class="form-label">Ảnh bìa</label>
                 <input type="file" class="form-control" id="cover" name="file" accept="image/*" onchange="previewImage(event)" /><br>
                 <div>
-                    <img id="preview" th:src="@{/assets/img/products/{filename}(filename=${product.cover})}" alt="Cover" style="width: 150px; height: 150px;" />
+                    <img id="preview" th:src="@{/uploads/{filename}(filename=${product.cover})}" alt="Cover" style="width: 150px; height: 150px;" />
                 </div>
                </div>
 
