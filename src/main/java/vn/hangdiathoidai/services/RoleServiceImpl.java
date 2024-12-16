@@ -1,6 +1,7 @@
 package vn.hangdiathoidai.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,4 +19,10 @@ public class RoleServiceImpl implements RoleService {
 	public List<Role> findAllRoles() {
         return roleRepository.findAll();
     }
+
+
+	@Override
+	public Optional<Role> findByRoleName(String roleName) {
+		return roleRepository.findByRoleName(roleName);
+	}
 }
