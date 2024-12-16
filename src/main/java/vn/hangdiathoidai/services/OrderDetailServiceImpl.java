@@ -60,4 +60,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 		public <S extends OrderDetail> S save(S entity) {
 			return orderDetailRepository.save(entity);
 		}
+
+		@Override
+		public long getTotalOrder() {
+			return orderDetailRepository.count();
+		}
 }

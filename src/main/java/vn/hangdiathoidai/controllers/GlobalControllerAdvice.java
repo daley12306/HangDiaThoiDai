@@ -30,12 +30,14 @@ public class GlobalControllerAdvice {
 
     @ModelAttribute
     public void addCartInfoToHeader(ModelMap model, @AuthenticationPrincipal UserDetails userDetails) {
-		User user = userService.findByUsername(userDetails.getUsername());
-        Cart cart = cartService.findByUserId(user.getId()).get();
-        List<CartItem> cartItems = cartItemService.findByCartId(cart.getId());
-        
-        model.addAttribute("cartItemCount", cartItems.size()); 
-        model.addAttribute("cart", cart);
-        model.addAttribute("cartItems", cartItems);
+		if(userDetails != null) {
+			User user = userService.findByUsername(userDetails.getUsername());
+	        Cart cart = cartService.findByUserId(user.getId()).get();
+	        List<CartItem> cartItems = cartItemService.findByCartId(cart.getId());
+	        
+	        model.addAttribute("cartItemCount", cartItems.size()); 
+	        model.addAttribute("cart", cart);
+	        model.addAttribute("cartItems", cartItems);
+		}
     }
 }

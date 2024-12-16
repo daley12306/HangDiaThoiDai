@@ -20,6 +20,7 @@
         <div class="col-md-6">
             <h1 class="display-5" th:text="${product.name}">Tên sản phẩm</h1>
             <p th:text="'Loại đĩa: ' + ${product.subCategory.name}">Category Name</p>
+            <h5 class="text-danger" th:text="'$' + ${sku.price}">Product Price</h5>
             <div class="mb-3">
                 <span class="badge badge-success" th:text="${product.status}">In Stock</span>
             </div>

@@ -83,10 +83,10 @@ public class CartServiceImpl implements CartService{
 		}
 
 		// Update cart total
-		int newTotal = cartItems.stream()
-				.mapToInt(item -> item.getProductsSku().getPrice() * item.getQuantity())
-				.sum();
-		cart.setTotal(newTotal);
+//		int newTotal = cartItems.stream()
+//				.mapToInt(item -> item.getProductsSku().getPrice() * item.getQuantity())
+//				.sum();
+		cart.setTotal(cart.getTotal() + sku.getPrice() * quantity);
 		cartRepository.save(cart);
 	}
 

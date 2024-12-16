@@ -21,4 +21,6 @@ public interface OrderDetailService {
 
 	<S extends OrderDetail> S save(S entity);
 
+	long getTotalOrder();
+
 }

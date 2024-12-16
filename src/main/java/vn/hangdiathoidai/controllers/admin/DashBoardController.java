@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import vn.hangdiathoidai.entity.Product;
+import vn.hangdiathoidai.services.OrderDetailService;
 import vn.hangdiathoidai.services.ProductService;
 import vn.hangdiathoidai.services.UserService;
 
@@ -22,13 +23,16 @@ public class DashBoardController {
     private UserService userService;
     @Autowired
     private ProductService productService;
-
+    @Autowired
+    private OrderDetailService orderDetailService; 
     @GetMapping("/dashboard")
     public String dashboard(Model model, HttpServletRequest request) {
         // Lấy các thông tin thống kê từ các dịch vụ
         long totalUsers = userService.getTotalUsers();
         long totalProducts = productService.getTotalProducts();
-        List<Product> latestProducts = productService.getLatestProducts(); // Giả sử bạn có phương thức này
+        List<Product> latestProducts = productService.getLatestProducts(); 
+        long totalOrder = orderDetailService.getTotalOrder();
+        model.addAttribute("totalOrder", totalOrder);// Giả sử bạn có phương thức này
         model.addAttribute("latestProducts", latestProducts);
         // Thêm các giá trị vào model
         model.addAttribute("totalUsers", totalUsers);
