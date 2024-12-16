@@ -34,7 +34,7 @@
                 <label for="avatar" class="form-label">Avatar</label>
                 <input type="file" class="form-control" id="avatar" name="file" accept="image/*" onchange="previewImage(event)" /><br>
                 <div>
-                    <img id="preview" th:src="@{/uploads/{filename}(filename=${user.avatar})}" alt="Avatar" style="width: 150px; height: 150px;" />
+                    <img id="preview" th:src="@{/assets/img/avatar/{filename}(filename=${user.avatar})}" alt="Avatar" style="width: 150px; height: 150px;" />
                 </div>
                </div>
                

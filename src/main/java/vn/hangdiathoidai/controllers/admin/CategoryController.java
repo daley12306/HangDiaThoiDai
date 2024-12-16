@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import vn.hangdiathoidai.entity.Category;
 import vn.hangdiathoidai.entity.SubCategory;
@@ -25,7 +26,7 @@ public class CategoryController {
             @RequestParam(defaultValue = "") String search,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            Model model, HttpSession session) {
+            Model model, HttpSession session, HttpServletRequest request) {
 
     	session.setAttribute("page", page);
     	
@@ -34,6 +35,9 @@ public class CategoryController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", categories.getTotalPages());
         model.addAttribute("search", search);
+        
+        model.addAttribute("currentUrl", request.getRequestURI());
+        
         return "admin/categories/list";
     }
 
@@ -52,13 +56,8 @@ public class CategoryController {
         
      // Tính tổng số SubCategory hiện tại
         long totalCategory = categoryService.getTotalCategory();
-        int size = 10;  // Số lượng phần tử mỗi trang (có thể lấy từ tham số hoặc mặc định)
+        int size = 10; 
         int totalPages = (int) Math.ceil((double) totalCategory / size);  // Tính tổng số trang
-
-        // Nếu tổng số phần tử chia hết cho size, trang cuối cùng là totalPages - 1
-        if (totalCategory % size == 0 && totalCategory > 0) {
-            totalPages--;  // Điều chỉnh trang cuối cùng nếu chia hết
-        }
         
 		if (totalPages == 0) {
 			totalPages = 1; // Nếu không có phần tử nào, tổng số trang là 1
@@ -110,7 +109,7 @@ public class CategoryController {
         }
         
         long totalCategory = categoryService.getTotalCategory();  // Tổng số phần tử
-        int size = 10;  // Số lượng phần tử mỗi trang (có thể lấy từ tham số hoặc mặc định)
+        int size = 10;
         int totalPages = (int) Math.ceil((double) totalCategory / size);  // Tính tổng số trang
         
         // Nếu số trang còn lại là 0, chuyển về trang đầu tiên

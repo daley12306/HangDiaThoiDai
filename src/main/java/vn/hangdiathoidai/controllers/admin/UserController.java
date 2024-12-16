@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import vn.hangdiathoidai.entity.Role;
 import vn.hangdiathoidai.entity.User;
@@ -41,7 +42,7 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoleService roleService;
-    @Value("${upload.dir}") // Đường dẫn thư mục upload được cấu hình trong application.properties
+    @Value("${upload.dir.user}") // Đường dẫn thư mục upload được cấu hình trong application.properties
     private String uploadDir;
 
     
@@ -49,7 +50,7 @@ public class UserController {
     @GetMapping
     public String listUsers(@RequestParam(value = "search", required = false) String searchTerm, 
                             @RequestParam(value = "page", defaultValue = "0") int page, 
-                            Model model, HttpSession session) {
+                            Model model, HttpSession session, HttpServletRequest request) {
         Pageable pageable = PageRequest.of(page, 10);
         Page<User> users;
         if (searchTerm != null && !searchTerm.isEmpty()) {
@@ -61,6 +62,9 @@ public class UserController {
         model.addAttribute("users", users);
         model.addAttribute("search", searchTerm);
         model.addAttribute("currentPage", page);
+        
+        model.addAttribute("currentUrl", request.getRequestURI());
+        
         return "admin/user/list";  
     }
     
@@ -78,7 +82,7 @@ public class UserController {
     public String saveUser(@ModelAttribute User user, 
                            @RequestParam("file") MultipartFile file,
                            @RequestParam(defaultValue = "0") int page,  // Nhận tham số trang
-                           @RequestParam(defaultValue = "10") int size) {  // Số lượng mỗi trang
+                           @RequestParam(defaultValue = "10") int size, HttpSession session) {  // Số lượng mỗi trang
 
         if (!file.isEmpty()) {
             try {
@@ -100,15 +104,22 @@ public class UserController {
 
         userService.saveUser(user);  // Lưu người dùng vào cơ sở dữ liệu
 
-        // Tính toán trang cuối sau khi thêm người dùng mới
-        long totalUsers = userService.getTotalUsers();  // Lấy tổng số người dùng
-        int totalPages = (int) Math.ceil((double) totalUsers / size);  // Tính số trang
-        if (totalUsers % size == 0 && totalUsers > 0) {
-            totalPages--;  // Điều chỉnh trang cuối nếu chia hết
+        Integer currentPage = (Integer) session.getAttribute("currentPage");
+        if (currentPage == null) {
+            currentPage = 0;  // Nếu không có trang hiện tại, mặc định là trang đầu tiên
         }
 
-        // Redirect về trang cuối
-        return "redirect:/admin/users?page=" + (totalPages-1) + "&size=" + size;
+        // Kiểm tra số lượng SubCategory còn lại sau khi xóa
+        long totalUser = userService.getTotalUsers();  // Tổng số phần tử
+        int totalPages = (int) Math.ceil((double) totalUser / size);  // Tính tổng số trang
+        
+        // Nếu số trang còn lại là 0, chuyển về trang đầu tiên
+        if (totalUser == 0 || currentPage >= totalPages) {
+            currentPage = Math.max(totalPages - 1, 0);  // Nếu không còn phần tử hoặc trang hiện tại vượt quá tổng số trang, quay lại trang trước đó
+        }
+
+        // Quay lại trang đúng
+        return "redirect:/admin/users?page=" + currentPage + "&size=" + size;  // Quay lại danh sách SubCategory
     }
 
     
@@ -138,8 +149,22 @@ public class UserController {
         // Nếu không tải ảnh mới lên, giữ lại ảnh cũ
         if (file != null && !file.isEmpty()) {
             // Lưu ảnh mới nếu có
-            String filename = fileStorageService.saveFile(file);  // Hàm này xử lý việc lưu ảnh
-            user.setAvatar(filename);  // Cập nhật trường avatar với ảnh mới
+        	try {
+                // Lưu ảnh như đã làm trước đây
+                String uploadDirectory = uploadDir + File.separator;
+                File dir = new File(uploadDirectory);
+                if (!dir.exists()) {
+                    dir.mkdirs(); // Tạo thư mục nếu chưa tồn tại
+                }
+
+                String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                Path path = Paths.get(uploadDirectory + File.separator + fileName);
+                Files.write(path, file.getBytes());
+                user.setAvatar(fileName);  // Lưu đường dẫn ảnh vào trường avatar của User
+            } catch (IOException e) {
+                e.printStackTrace();
+            }  // Hàm này xử lý việc lưu ảnh
+           
         } else {
             // Nếu không thay đổi ảnh, giữ nguyên avatar cũ
             user.setAvatar(oldFile);

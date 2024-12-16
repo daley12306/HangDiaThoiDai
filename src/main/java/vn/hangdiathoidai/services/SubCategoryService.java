@@ -35,6 +35,8 @@ public interface SubCategoryService {
 	Category getCategoryById(Long id);
 
 	List<SubCategory> findByParentCategoryId(Long categoryId);
+
+	List<SubCategory> getAllSortedSubCategories();
 	
 	
 }

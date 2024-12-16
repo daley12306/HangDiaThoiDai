@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}">
+
+<body layout:fragment="content">
+	<div id="page-content" class="page-content">
+		<div class="banner">
+			<div class="jumbotron jumbotron-bg text-center rounded-0"
+				style="background-image: url('/assets/img/background-header.jpg');">
+				<div class="container">
+					<h1 class="pt-5">Tài khoản của tôi</h1>
+				</div>
+			</div>
+		</div>
+
+		<ul class="nav nav-tabs mt-5">
+			<li class="nav-item"><a class="nav-link text-primary"
+				href="/account/profile">Hồ sơ</a></li>
+			<li class="nav-item"><a class="nav-link active font-weight-bold"
+				href="/account/address">Địa chỉ nhận hàng</a></li>
+		</ul>
+
+		<section id="checkout">
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="col-xs-12 col-sm-8">
+						<div class="d-flex justify-content-between mb-3">
+							<h5>ĐỊA CHỈ</h5>
+							<a href="/account/address/add" class="btn btn-primary">+ Thêm địa chỉ mới</a>
+						</div>
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item"
+								th:each="address, stat : ${addresses}">
+								<div class="d-flex w-100 row">
+									<div class="d-flex flex-column col">
+										<h6 class="mb-1"
+											th:text="${address.number + ' ' + address.street}"></h6>
+										<small
+											th:text="${address.ward + ', ' + address.district + ', ' + address.province}"></small>
+									</div>
+									<p class="col-auto" th:text="${address.phoneNumber}"></p>
+									<div class="d-flex flex-column col p-0">
+										<div class="mb-1 text-right">
+											<a th:href="@{/account/address/edit/{id}(id=${address.id})}">Sửa</a> <a
+												th:href="@{/account/address/delete/{id}(id=${address.id})}"
+												th:if="${!address.isDefault}" class="ml-2">Xóa</a>
+										</div>
+										<a class="btn btn-primary text-white ml-auto"
+											th:if="${!address.isDefault}" th:href="@{/account/address/set-default/{id}(id=${address.id})}">Thiết lập mặc
+											định</a>
+										<div>
+											<span th:if="${address.isDefault}" class="badge badge-primary absolute p-1">Mặc định</span>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

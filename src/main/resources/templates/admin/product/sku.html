@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+<head>
+    <title>Edit SKU</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h3><span th:text="${productName}"></span></h3>
+
+        <!-- Danh sách SKU của sản phẩm -->
+        <div th:each="sku : ${productSkus}">
+            <form th:action="@{/admin/products/edit/sku/{skuId}(skuId=${sku.id})}" method="post">
+            
+            <div class="mb-3">
+                <label for="sku" class="form-label">SKU</label>
+                <input type="text" class="form-control" id="sku" name="sku" th:value="${sku.sku}" disabled />
+			</div>
+			
+			<div class="mb-3">
+                <label for="price" class="form-label">Giá</label>
+                <input type="text" class="form-control" id="price" name="price" th:value="${sku.price}" />
+			</div>
+			
+			<div class="mb-3">
+                <label for="quantity" class="form-label">Số lượng</label>
+                <input type="text" class="form-control" id="quantity" name="quantity" th:value="${sku.quantity}" />
+			</div>
+			
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                <a th:href="@{/admin/products}" class="btn btn-secondary">Trở về</a>
+            </form>
+            <hr/>
+        </div>
+
+        <!-- Link quay lại danh sách SKU -->
+        
+    </div>
+</body>
+</html>

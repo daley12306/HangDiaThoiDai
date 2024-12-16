@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import vn.hangdiathoidai.entity.Voucher;
 import vn.hangdiathoidai.enums.DiscountType;
@@ -25,7 +26,7 @@ public class VoucherController {
     @GetMapping
     public String listVouchers(@RequestParam(name = "keyword", required = false) String keyword,
                                @RequestParam(name = "page", defaultValue = "0") int page,
-                               Model model, HttpSession session) {
+                               Model model, HttpSession session, HttpServletRequest request) {
         Pageable pageable = PageRequest.of(page, 10);
 
         // Kiểm tra nếu người dùng nhập vào loại giảm giá (discountType)
@@ -46,6 +47,9 @@ public class VoucherController {
         session.setAttribute("currentPage", page);
         model.addAttribute("vouchers", vouchers);
         model.addAttribute("keyword", keyword);
+        
+        model.addAttribute("currentUrl", request.getRequestURI());
+        
         return "admin/voucher/list";
     }
 
@@ -66,10 +70,9 @@ public class VoucherController {
         int size = 10;  // Số lượng phần tử mỗi trang (có thể lấy từ tham số hoặc mặc định)
         int totalPages = (int) Math.ceil((double) totalVoucher / size);  // Tính tổng số trang
 
-        // Nếu tổng số phần tử chia hết cho size, trang cuối cùng là totalPages - 1
-        if (totalVoucher % size == 0 && totalVoucher > 0) {
-            totalPages--;  // Điều chỉnh trang cuối cùng nếu chia hết
-        }
+        if (totalPages == 0) {
+			totalPages = 1;
+		}
         return "redirect:/admin/voucher?page=" + (totalPages-1) + "&size=" + size;  // Chuyển hướng về trang cuối;
     }
 
@@ -96,11 +99,24 @@ public class VoucherController {
     @GetMapping("/delete/{id}")
     public String deleteVoucher(@PathVariable("id") Long id, HttpSession session) {
         voucherService.deleteVoucher(id);
-        Integer page = (Integer) session.getAttribute("currentPage");
-        if (page == null) {
-            page = 0;  // Nếu không có trang hiện tại, mặc định là trang đầu tiên
+     // Lấy trang hiện tại từ session
+        Integer currentPage = (Integer) session.getAttribute("currentPage");
+        if (currentPage == null) {
+            currentPage = 0;  // Nếu không có trang hiện tại, mặc định là trang đầu tiên
         }
-        return "redirect:/admin/voucher?page="+page;
+
+        // Kiểm tra số lượng SubCategory còn lại sau khi xóa
+        long totalVoucher = voucherService.getTotalVoucher();  // Tổng số phần tử
+        int size = 10;  // Số lượng phần tử mỗi trang (có thể lấy từ tham số hoặc mặc định)
+        int totalPages = (int) Math.ceil((double) totalVoucher / size);  // Tính tổng số trang
+        
+        // Nếu số trang còn lại là 0, chuyển về trang đầu tiên
+        if (totalVoucher == 0 || currentPage >= totalPages) {
+            currentPage = Math.max(totalPages - 1, 0);  // Nếu không còn phần tử hoặc trang hiện tại vượt quá tổng số trang, quay lại trang trước đó
+        }
+
+        // Quay lại trang đúng
+        return "redirect:/admin/subcategory?page=" + currentPage + "&size=" + size;  // Quay lại danh sách SubCategory
     }
    
     

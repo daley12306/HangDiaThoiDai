@@ -1,13 +1,16 @@
 package vn.hangdiathoidai.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import vn.hangdiathoidai.entity.Carrier;
+import vn.hangdiathoidai.enums.CarrierStatus;
 import vn.hangdiathoidai.repository.CarrierRepository;
 
 @Service
@@ -53,4 +56,10 @@ public class CarrierServiceImpl implements CarrierService {
 	public long getTotalCarriers() {
 		return carrierRepository.count();
 	}
+	
+	@Override
+	public List<Carrier> findActiveCarriersSortedByFee() {
+        Sort sort = Sort.by(Sort.Order.asc("shippingFee"));
+        return carrierRepository.findByStatus(CarrierStatus.ACTIVE, sort);
+    }
 }
