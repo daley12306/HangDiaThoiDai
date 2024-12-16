@@ -35,6 +35,7 @@ public class GlobalControllerAdvice {
 	        Cart cart = cartService.findByUserId(user.getId()).get();
 	        List<CartItem> cartItems = cartItemService.findByCartId(cart.getId());
 	        
+	        model.addAttribute("user", user);
 	        model.addAttribute("cartItemCount", cartItems.size()); 
 	        model.addAttribute("cart", cart);
 	        model.addAttribute("cartItems", cartItems);

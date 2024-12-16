@@ -65,8 +65,10 @@ public class CartController {
 	@PostMapping("/add/{productId}")
 	public String addToCart(@PathVariable("productId") Long productId,
 							@RequestParam("quantity") Integer quantity,
-							RedirectAttributes redirectAttributes) {
-		Long userId = 2L; // Giả sử user đã đăng nhập có ID là 2
+							RedirectAttributes redirectAttributes, 
+							@AuthenticationPrincipal UserDetails userDetails) {
+		User user = userService.findByUsername(userDetails.getUsername());
+		Long userId = user.getId();
 
 		try {
 			// Fetch the product by productId

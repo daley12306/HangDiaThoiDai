@@ -78,7 +78,7 @@ public class CheckOutController {
 		User user = userService.findByUsername(userDetails.getUsername());
 		Cart cart = cartService.findByUserId(user.getId()).get();
 		List<CartItem> cartItems = cartItemService.findByCartId(cart.getId());
-		List<Address> addresses = addressService.findByUserId(2L);
+		List<Address> addresses = addressService.findByUserId(user.getId());
 		List<Carrier> carriers = carrierService.findActiveCarriersSortedByFee();
 
 		model.addAttribute("cart", cart);

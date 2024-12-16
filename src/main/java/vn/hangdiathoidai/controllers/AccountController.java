@@ -63,7 +63,7 @@ public class AccountController {
 	@PostMapping("/profile/save")
 	public String saveProfile(@Valid @ModelAttribute("user") UserModel userModel,
 			@RequestParam int day, @RequestParam int month, @RequestParam int year,
-			@AuthenticationPrincipal UserDetails userDetails) throws ParseException {
+			@AuthenticationPrincipal UserDetails userDetails, MultipartFile file) throws ParseException, IOException {
 		User user = userService.findByUsername(userDetails.getUsername());
 		user.setUsername(userModel.getUsername());
 		user.setFullName(userModel.getFullName());

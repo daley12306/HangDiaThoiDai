@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +45,8 @@ public class UserController {
     private RoleService roleService;
     @Value("${upload.dir}") // Đường dẫn thư mục upload được cấu hình trong application.properties
     private String uploadDir;
-
+    @Autowired
+    PasswordEncoder passwordEncoder;
     
  // Hiển thị danh sách user với phân trang
     @GetMapping
@@ -101,7 +103,7 @@ public class UserController {
                 e.printStackTrace();
             }
         }
-
+        user.setPassword(passwordEncoder.encode(user.getPassword()));  // Mã hóa mật khẩu
         userService.saveUser(user);  // Lưu người dùng vào cơ sở dữ liệu
 
         Integer currentPage = (Integer) session.getAttribute("currentPage");
@@ -158,6 +160,7 @@ public class UserController {
 
         // Cập nhật thông tin người dùng trong DB
         user.setId(id);  // Đảm bảo ID đúng
+        user.setPassword(passwordEncoder.encode(user.getPassword()));  // Giữ nguyên mật khẩu
         userService.saveUser(user);
         
         Integer page = (Integer) session.getAttribute("currentPage");

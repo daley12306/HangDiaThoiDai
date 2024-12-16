@@ -32,7 +32,7 @@ public class DashBoardController {
         long totalUsers = userService.getTotalUsers();
         long totalProducts = productService.getTotalProducts();
         List<Product> latestProducts = productService.getLatestProducts(); 
-        long totalOrder = orderDetailService.getTotalOrder();
+        long totalOrder = orderDetailService.getTotalOrders();
         model.addAttribute("totalOrder", totalOrder);// Giả sử bạn có phương thức này
         model.addAttribute("latestProducts", latestProducts);
         List<Product> topSellingProducts = productService.getTopSellingProducts(5);
@@ -41,7 +41,7 @@ public class DashBoardController {
         model.addAttribute("totalUsers", totalUsers);
         model.addAttribute("totalProducts", totalProducts);
         model.addAttribute("pageTitle", "Dashboard");
-        model.addAttribute("totalOrders", totalOrders);
+        model.addAttribute("totalOrders", totalOrder);
         model.addAttribute("currentUrl", request.getRequestURI());
         
         return "admin/dashboard";  // Trả về trang dashboard.html
