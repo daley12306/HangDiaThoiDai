@@ -32,7 +32,7 @@
 								</thead>
 								<tbody>
 									<tr th:each="cartItem, stat : ${cartItems}">
-										<td><img th:src="${cartItem.product.cover}" width="60">
+										<td><img th:src="@{/assets/img/products/{file}(file=${cartItem.product.cover})}" width="60">
 										</td>
 										<td th:text="${cartItem.product.name}"></td>
 										<td th:text="${#numbers.formatDecimal(cartItem.productsSku.price, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>

@@ -7,7 +7,10 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +39,7 @@ public class AccountController {
 	
 	@Autowired
 	AddressService addressService;
+
 	
 	@Autowired
 	FileStorageService fileStorageService;
@@ -50,18 +54,17 @@ public class AccountController {
 	}
 	
 	@GetMapping("/profile")
-	public String profile(ModelMap model) {
-		// Default user
-		User user = userService.findUserById(2L);
+	public String profile(ModelMap model, @AuthenticationPrincipal UserDetails userDetails) {
+		User user = userService.findByUsername(userDetails.getUsername());
 		model.addAttribute("user", user);
 		return "user/profile";
 	}
 	
 	@PostMapping("/profile/save")
 	public String saveProfile(@Valid @ModelAttribute("user") UserModel userModel,
-			@RequestParam int day, @RequestParam int month, @RequestParam int year, MultipartFile file) throws ParseException, IOException {
-		// Default user
-		User user = userService.findUserById(2L);
+			@RequestParam int day, @RequestParam int month, @RequestParam int year,
+			@AuthenticationPrincipal UserDetails userDetails) throws ParseException {
+		User user = userService.findByUsername(userDetails.getUsername());
 		user.setUsername(userModel.getUsername());
 		user.setFullName(userModel.getFullName());
 		user.setEmail(userModel.getEmail());
@@ -83,8 +86,10 @@ public class AccountController {
 	}
 	
 	@GetMapping("/address")
-	public String address(ModelMap model, @RequestParam(required = false) Long selectedId) {
-		List<Address> addresses = addressService.findByUserId(2L);
+	public String address(ModelMap model, @RequestParam(required = false) Long selectedId,
+			@AuthenticationPrincipal UserDetails userDetails) {
+		User user = userService.findByUsername(userDetails.getUsername());
+		List<Address> addresses = addressService.findByUserId(user.getId());
 		model.addAttribute("addresses", addresses);
 		return "user/address";
 	}
@@ -103,10 +108,11 @@ public class AccountController {
 	}
 	
 	@PostMapping("/address/save")
-	public String saveAddress(@Valid @ModelAttribute("address") AddressModel addressModel) {
+	public String saveAddress(@Valid @ModelAttribute("address") AddressModel addressModel,
+			@AuthenticationPrincipal UserDetails userDetails) {
 		Address address = new Address();
 		BeanUtils.copyProperties(addressModel, address);
-		address.setUser(userService.findUserById(2L));
+		address.setUser(userService.findByUsername(userDetails.getUsername()));
 		address.setIsDefault(false);
 		addressService.saveAddress(address);
 		return "redirect:/account/address";
@@ -119,8 +125,9 @@ public class AccountController {
 	}
 	
 	@GetMapping("/address/set-default/{id}")
-	public String setDefaultAddress(@PathVariable Long id) {
-		addressService.setDefaultAddress(id, 2L);
+	public String setDefaultAddress(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+		User user = userService.findByUsername(userDetails.getUsername());
+		addressService.setDefaultAddress(id, user.getId());
 		return "redirect:/account/address";
 	}
 }

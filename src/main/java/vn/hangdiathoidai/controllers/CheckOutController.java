@@ -1,11 +1,14 @@
 package vn.hangdiathoidai.controllers;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -24,6 +27,7 @@ import vn.hangdiathoidai.entity.Cart;
 import vn.hangdiathoidai.entity.CartItem;
 import vn.hangdiathoidai.entity.OrderDetail;
 import vn.hangdiathoidai.entity.OrderItem;
+import vn.hangdiathoidai.entity.User;
 import vn.hangdiathoidai.entity.Voucher;
 import vn.hangdiathoidai.enums.DiscountType;
 import vn.hangdiathoidai.enums.OrderStatus;
@@ -34,6 +38,7 @@ import vn.hangdiathoidai.services.CartItemService;
 import vn.hangdiathoidai.services.CartService;
 import vn.hangdiathoidai.services.OrderDetailService;
 import vn.hangdiathoidai.services.OrderItemService;
+import vn.hangdiathoidai.services.UserService;
 import vn.hangdiathoidai.services.VNPAYService;
 import vn.hangdiathoidai.services.VoucherService;
 
@@ -64,11 +69,14 @@ public class CheckOutController {
 	
 	@Autowired
 	OrderItemService orderItemService;
+	
+	@Autowired
+	UserService userService;
 
 	@GetMapping("")
-	public String showCheckOut(HttpSession session, ModelMap model) {
-		// Default user
-		Cart cart = cartService.findByUserId(2L).get();
+	public String showCheckOut(HttpSession session, ModelMap model, @AuthenticationPrincipal UserDetails userDetails) {
+		User user = userService.findByUsername(userDetails.getUsername());
+		Cart cart = cartService.findByUserId(user.getId()).get();
 		List<CartItem> cartItems = cartItemService.findByCartId(cart.getId());
 		List<Address> addresses = addressService.findByUserId(2L);
 		List<Carrier> carriers = carrierService.findActiveCarriersSortedByFee();
@@ -115,10 +123,10 @@ public class CheckOutController {
 
 	@PostMapping("/voucher")
 	public String applyVoucher(HttpSession session, RedirectAttributes redirectAttributes,
-			@RequestParam String voucherCode) {
+			@RequestParam String voucherCode, @AuthenticationPrincipal UserDetails userDetails) {
 		Voucher voucher = voucherService.findByCode(voucherCode);
-		// Default user
-		Cart cart = cartService.findByUserId(2L).get();
+		User user = userService.findByUsername(userDetails.getUsername());
+		Cart cart = cartService.findByUserId(user.getId()).get();
 		if (voucherCode.isEmpty()) {
 			redirectAttributes.addFlashAttribute("message", "Vui lòng nhập mã giảm giá");
 		} else if (voucher == null) {
@@ -149,9 +157,12 @@ public class CheckOutController {
 	}
 	
 	@PostMapping("/submit")
-	public String submitOrder(HttpSession session, HttpServletRequest request, RedirectAttributes redirectAttributes, @RequestParam String paymentMethod) {
-		Cart cart = cartService.findByUserId(2L).get();
-		String orderInfo = "Thanh toan don hang " + cart.getId();
+	public String submitOrder(HttpSession session, HttpServletRequest request, 
+			RedirectAttributes redirectAttributes, @RequestParam String paymentMethod,
+			@AuthenticationPrincipal UserDetails userDetails) {
+		User user = userService.findByUsername(userDetails.getUsername());
+		Cart cart = cartService.findByUserId(user.getId()).get();
+		String orderInfo = "Thanh toan don hang cua " + cart.getUser().getFullName();
 		if (paymentMethod.equals("COD")) {
 			redirectAttributes.addFlashAttribute("paymentMethod", PaymentMethod.COD);
 			redirectAttributes.addFlashAttribute("paymentStatus", 1);
@@ -175,11 +186,11 @@ public class CheckOutController {
     
     @Transactional
     @GetMapping("/status")
-	public String orderStatus(HttpSession session, ModelMap model) {
+	public String orderStatus(HttpSession session, ModelMap model, @AuthenticationPrincipal UserDetails userDetails) {
     	int paymentStatus =  model.getAttribute("paymentStatus") != null ? (int) model.getAttribute("paymentStatus") : 0;
 		if (paymentStatus == 1) {
-			// Default user
-			Cart cart = cartService.findByUserId(2L).get();
+			User user = userService.findByUsername(userDetails.getUsername());
+			Cart cart = cartService.findByUserId(user.getId()).get();
 			List<CartItem> cartItems = cartItemService.findByCartId(cart.getId());
 			
 			int randomId = new Random().nextInt(999999);
@@ -193,7 +204,8 @@ public class CheckOutController {
 			order.setPaymentMethod(model.getAttribute("paymentMethod") != null ? (PaymentMethod) model.getAttribute("paymentMethod") : PaymentMethod.COD);
 			order.setCarrier((Carrier) session.getAttribute("selectedCarrier"));
 			order.setAddress((Address) session.getAttribute("selectedAddress"));
-			order.setTotal(cart.getTotal() - discountProduct - discountShipping);			
+			order.setTotal(cart.getTotal() - discountProduct - discountShipping);	
+			order.setCreatedAt(new Date());
 			order = orderDetailService.save(order);
 			
 			for (CartItem cartItem : cartItems) {

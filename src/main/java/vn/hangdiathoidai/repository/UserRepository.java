@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import vn.hangdiathoidai.entity.User;
+import java.util.List;
+
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -16,5 +18,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Tìm kiếm user theo tên hoặc email, phân trang
     Page<User> findByFullNameContainingOrEmailContaining(String fullName, String email, Pageable pageable);
 
-	User findByUsername(String username);
+    
+    User findByEmail(String email);
+    
+    User findByPhoneNumber(String phoneNumber);
+    
+    User findByUsername(String username);
+
 }

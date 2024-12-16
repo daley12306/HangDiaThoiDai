@@ -11,8 +11,8 @@ import vn.hangdiathoidai.repository.ProductSkuRepository;
 @Service
 public class ProductSkuServiceImpl implements ProductSkuService {
 	@Autowired
-    private ProductSkuRepository productsSkuRepository;
-	
+    public ProductSkuRepository productsSkuRepository;
+
 	@Override
 	public ProductsSku getSkuById(Long skuId) {
         return productsSkuRepository.findById(skuId).orElse(null);
@@ -33,5 +33,11 @@ public class ProductSkuServiceImpl implements ProductSkuService {
 	public List<ProductsSku> getSkuByProductId(Long productId) {
 		return productsSkuRepository.findByProductId(productId);
 	}
+
+    @Override
+    public ProductsSku findByProductId(Long productId) {
+        return productsSkuRepository.findById(productId)
+                .orElse(null);
+    }
 }
 

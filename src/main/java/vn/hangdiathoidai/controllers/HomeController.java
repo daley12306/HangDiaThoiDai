@@ -6,9 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import vn.hangdiathoidai.entity.Product;
+import vn.hangdiathoidai.entity.ProductsSku;
 import vn.hangdiathoidai.entity.Review;
 import vn.hangdiathoidai.enums.ProductStatus;
 import vn.hangdiathoidai.services.ProductService;
+import vn.hangdiathoidai.services.ProductSkuService;
 import vn.hangdiathoidai.services.ReviewService;
 
 import java.util.List;
@@ -19,6 +21,8 @@ public class HomeController {
 	private ProductService productService;
 	@Autowired
 	private  ReviewService reviewService;
+	@Autowired
+	private ProductSkuService ProductSkuService;
 
     @GetMapping
 	public String homePage(Model model) {
@@ -30,6 +34,7 @@ public class HomeController {
 	@GetMapping("/product/{id}")
 	public String getProductDetails(@PathVariable("id") Long id, Model model) {
 		Product product = productService.getProductById(id);
+		ProductsSku sku = ProductSkuService.findByProductId(id);
 
 		if (product == null) {
 			model.addAttribute("errorMessage", "Sản phẩm không tồn tại.");
@@ -39,6 +44,7 @@ public class HomeController {
 		List<Review> reviews = reviewService.getReviewsByProduct(id);
 
 		model.addAttribute("product", product);
+		model.addAttribute("sku", sku);
 		model.addAttribute("reviews", reviews);
 
 		if (reviews.isEmpty()) {

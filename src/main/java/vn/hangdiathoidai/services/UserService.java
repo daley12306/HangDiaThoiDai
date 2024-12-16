@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import vn.hangdiathoidai.entity.User;
 
@@ -22,8 +23,9 @@ public interface UserService {
 
 	long getTotalUsers();
 
-	User findByUsername(String username);
-
-
+	User findByEmail(String email);
+    
+    User findByPhoneNumber(String phoneNumber);
 	
+    User findByUsername(String username);
 }
