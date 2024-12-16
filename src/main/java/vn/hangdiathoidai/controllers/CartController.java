@@ -1,7 +1,9 @@
 package vn.hangdiathoidai.controllers;
 
+import java.util.Date;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,13 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import vn.hangdiathoidai.entity.Cart;
-import vn.hangdiathoidai.entity.CartItem;
-import vn.hangdiathoidai.entity.Voucher;
-import vn.hangdiathoidai.services.CartItemService;
-import vn.hangdiathoidai.services.CartService;
-import vn.hangdiathoidai.services.VoucherService;
+import vn.hangdiathoidai.entity.*;
+import vn.hangdiathoidai.services.*;
 
+@Slf4j
 @Controller
 @RequestMapping("/cart")
 public class CartController {
@@ -28,6 +27,10 @@ public class CartController {
 	
 	@Autowired
 	CartItemService cartItemService;
+	@Autowired
+	ProductService productService;
+	@Autowired
+	ProductSkuService skuService;
 	
 	@GetMapping("")
 	public String cart(Model model) {
@@ -48,4 +51,40 @@ public class CartController {
 		cartItemService.deleteById(id);
 		return "redirect:/cart";
 	}
+
+	@PostMapping("/add/{productId}")
+	public String addToCart(@PathVariable("productId") Long productId,
+							@RequestParam("quantity") Integer quantity,
+							RedirectAttributes redirectAttributes) {
+		Long userId = 2L; // Giả sử user đã đăng nhập có ID là 2
+
+		try {
+			// Fetch the product by productId
+			Product product = productService.getProductById(productId);
+			if (product == null) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Sản phẩm không tồn tại.");
+				return "redirect:/shop";
+			}
+
+			// Fetch the SKU for the product
+			ProductsSku sku = skuService.findByProductId(productId);
+			if (sku == null) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy SKU cho sản phẩm.");
+				return "redirect:/shop";
+			}
+			cartService.addToCart(productId, userId, sku, quantity);
+
+			// Add success message
+			redirectAttributes.addFlashAttribute("message", "Sản phẩm đã được thêm vào giỏ hàng!");
+
+		} catch (Exception e) {
+			// Handle any errors
+			redirectAttributes.addFlashAttribute("errorMessage", "Đã xảy ra lỗi khi thêm vào giỏ hàng.");
+		}
+
+		// Redirect to shop
+		return "redirect:/product/" + productId;
+	}
+
+
 }

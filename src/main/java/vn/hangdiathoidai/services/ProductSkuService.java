@@ -11,5 +11,6 @@ public interface ProductSkuService {
 	ProductsSku getSkuById(Long skuId);
 
 	List<ProductsSku> getSkuByProductId(Long productId);
-	
+
+    ProductsSku findByProductId(Long productId);
 }

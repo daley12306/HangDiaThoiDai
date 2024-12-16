@@ -22,7 +22,5 @@ public class Cart {
     private User user;
     @Column(nullable = false)
     private Integer total;
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartItem> items = new ArrayList<>();
 
 }
