@@ -44,48 +44,50 @@
         </div>
 
         <div class="row mt-4">
-		    <div class="col-md-6">
-		        <div class="card">
-		            <div class="card-header">Sản Phẩm Mới Nhất</div>
-		            <div class="card-body">
-		                <ul class="list-group">
-		                    <li class="list-group-item" th:each="product : ${latestProducts}">
-		                        <span th:text="${product.name}">Sản phẩm 1</span> - 
-		                        <span th:text="${product.createdAt}">2024-12-13</span>
-		                    </li>
-		                </ul>
-		            </div>
-		        </div>
-		    </div>
-		</div>
+    <!-- Sản Phẩm Mới Nhất -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Sản Phẩm Mới Nhất</div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="product : ${latestProducts}">
+                        <span th:text="${product.name}">Sản phẩm 1</span> - 
+                        <span th:text="${product.createdAt}">2024-12-13</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Selling Products -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Top 5 Sản Phẩm Bán Chạy</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 d-flex flex-wrap">
+                        <div class="product-card mb-3" style="width: 48%; margin-right: 2%;" th:each="product : ${topSellingProducts}">
+                            <div class="card" style="height: 300px;">
+                                <img th:src="@{/uploads/{file}(file=${product.cover})}" class="card-img-top"
+                                     style="height: 150px; object-fit: cover;" alt="Top Product">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <h5 class="card-title text-center text-truncate" th:text="${product.name}">CD Name</h5>
+                                    <p class="card-text text-truncate text-center" style="max-height: 50px;" th:text="${product.description}">CD Description</p>
+                                </div>
+                                <div class="card-footer bg-white border-0">
+                                    <a th:href="@{|/product/${product.id}|}" class="btn btn-primary w-100">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
     </div>
 
-    <!-- Nhúng Script để vẽ biểu đồ (nếu có sử dụng Chart.js) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Biểu đồ ví dụ (sử dụng Chart.js)
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'line',  // Có thể thay đổi kiểu biểu đồ (line, bar, pie, v.v.)
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May'],  // Dữ liệu cho trục x
-                datasets: [{
-                    label: 'Doanh thu',
-                    data: [10, 20, 30, 40, 50],  // Dữ liệu doanh thu
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                    fill: false
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
+    
 </body>
 </html>

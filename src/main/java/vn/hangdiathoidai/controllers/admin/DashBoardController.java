@@ -24,7 +24,8 @@ public class DashBoardController {
     @Autowired
     private ProductService productService;
     @Autowired
-    private OrderDetailService orderDetailService; 
+    private OrderDetailService orderDetailService;
+
     @GetMapping("/dashboard")
     public String dashboard(Model model, HttpServletRequest request) {
         // Lấy các thông tin thống kê từ các dịch vụ
@@ -34,11 +35,13 @@ public class DashBoardController {
         long totalOrder = orderDetailService.getTotalOrder();
         model.addAttribute("totalOrder", totalOrder);// Giả sử bạn có phương thức này
         model.addAttribute("latestProducts", latestProducts);
+        List<Product> topSellingProducts = productService.getTopSellingProducts(5);
+        model.addAttribute("topSellingProducts", topSellingProducts); // Truyền vào model
         // Thêm các giá trị vào model
         model.addAttribute("totalUsers", totalUsers);
         model.addAttribute("totalProducts", totalProducts);
         model.addAttribute("pageTitle", "Dashboard");
-        
+        model.addAttribute("totalOrders", totalOrders);
         model.addAttribute("currentUrl", request.getRequestURI());
         
         return "admin/dashboard";  // Trả về trang dashboard.html

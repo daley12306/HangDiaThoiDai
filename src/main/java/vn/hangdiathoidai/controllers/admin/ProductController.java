@@ -49,7 +49,7 @@ public class ProductController {
     private FileStorageService fileStorageService;
     @Autowired
     private ProductSkuService productsSkuService;
-    @Value("${upload.dir.product}") 
+    @Value("${upload.dir}") 
     private String uploadDir;
     
     // Hiển thị danh sách sản phẩm

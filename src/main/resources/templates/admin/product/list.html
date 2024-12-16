@@ -35,7 +35,7 @@
                     <td th:text="${(products.number * products.size) + iterStat.index + 1}"></td>
                     <td th:text="${product.name}"></td>
                     <td>
-                        <img th:src="@{/assets/img/products/{filename}(filename=${product.cover})}" 
+                        <img th:src="@{/uploads/{filename}(filename=${product.cover})}" 
                              th:alt="${product.name + ' - Cover Image'}" 
                              style="width: 100px; height: 100px;" />
                     </td>

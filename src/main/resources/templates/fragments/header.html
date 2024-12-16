@@ -32,8 +32,10 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             	<a class="dropdown-item" href="/account/profile">Tài khoản của tôi</a>
                                 <a class="dropdown-item" href="/order">Đơn hàng</a>
+
                                 <a sec:authorize="hasRole('admin')" class="dropdown-item" href="/admin/dashboard">Bảng điều khiển</a>
                                 <a class="dropdown-item" href="/logout">Đăng xuất</a>
+
                             </div>
                           </li>
 

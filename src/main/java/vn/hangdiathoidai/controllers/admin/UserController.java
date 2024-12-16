@@ -42,7 +42,7 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoleService roleService;
-    @Value("${upload.dir.user}") // Đường dẫn thư mục upload được cấu hình trong application.properties
+    @Value("${upload.dir}") // Đường dẫn thư mục upload được cấu hình trong application.properties
     private String uploadDir;
 
     
@@ -149,23 +149,9 @@ public class UserController {
         // Nếu không tải ảnh mới lên, giữ lại ảnh cũ
         if (file != null && !file.isEmpty()) {
             // Lưu ảnh mới nếu có
-        	try {
-                // Lưu ảnh như đã làm trước đây
-                String uploadDirectory = uploadDir + File.separator;
-                File dir = new File(uploadDirectory);
-                if (!dir.exists()) {
-                    dir.mkdirs(); // Tạo thư mục nếu chưa tồn tại
-                }
-
-                String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                Path path = Paths.get(uploadDirectory + File.separator + fileName);
-                Files.write(path, file.getBytes());
-                user.setAvatar(fileName);  // Lưu đường dẫn ảnh vào trường avatar của User
-            } catch (IOException e) {
-                e.printStackTrace();
-            }  // Hàm này xử lý việc lưu ảnh
-           
-        } else {
+        	String filename = fileStorageService.saveFile(file);
+        	user.setAvatar(filename);
+        }else {
             // Nếu không thay đổi ảnh, giữ nguyên avatar cũ
             user.setAvatar(oldFile);
         }

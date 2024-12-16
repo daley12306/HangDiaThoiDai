@@ -21,6 +21,10 @@ public interface OrderDetailService {
 
 	<S extends OrderDetail> S save(S entity);
 
-	long getTotalOrder();
+	long getTotalOrders();
+
+	Page<OrderDetail> findOrders(int page, int size);
+
+	Page<OrderDetail> findOrdersByUserId(Long userId, int page, int size);
 
 }
