@@ -16,14 +16,6 @@ Chào mừng bạn đến với **Hãng Đĩa Thời Đại**, một nền tản
         - Duyệt và mua sản phẩm.
         - Quản lý đơn hàng cá nhân.
         - Thanh toán, đánh giá sản phẩm, yêu cầu hoàn tiền - trả hàng.
-    - **Seller - Người bán**:
-        - Có tất cả các quyền của User.
-        - Theo dõi doanh thu.
-        - Tạo phiếu giảm giá và quản lý trạng thái sản phẩm.
-        - Theo dõi trạng thái sản phẩm (đang chờ xử lý, đã giao hàng, v.v.).
-    - **Shipper - Người giao hàng**:
-        - Cập nhật trạng thái vận chuyển sản phẩm.
-        - Quản lý đơn hàng được phân công, thống kê đơn hàng được phân giao.
 
 - **Danh mục sản phẩm đa dạng**
     - Cung cấp nhiều thể loại nhạc với các định dạng khác nhau (CD, băng cát-sét, đĩa vinyl).
@@ -85,13 +77,7 @@ http://localhost:8081
 ### User - Người dùng
 - Duyệt danh mục sản phẩm và thêm đĩa nhạc vào giỏ hàng.
 - Thanh toán và theo dõi trạng thái đơn hàng.
-
-### Seller - Người bán
-- Quản lý doanh thu, phiếu giảm giá và trạng thái sản phẩm.
-
-### Shipper - Người giao hàng
-- Cập nhật thông tin vận chuyển cho đơn hàng.
-
+- 
 ---
 
 ## 🌍 Đóng góp
