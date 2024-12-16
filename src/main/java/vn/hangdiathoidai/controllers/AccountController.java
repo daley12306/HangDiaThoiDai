@@ -61,7 +61,7 @@ public class AccountController {
 	}
 	
 	@PostMapping("/profile/save")
-	public String saveProfile(@Valid @ModelAttribute("user") UserModel userModel,
+	public String saveProfile(@Valid @ModelAttribute("user") User userModel,
 			@RequestParam int day, @RequestParam int month, @RequestParam int year,
 			@AuthenticationPrincipal UserDetails userDetails, MultipartFile file) throws ParseException, IOException {
 		User user = userService.findByUsername(userDetails.getUsername());
@@ -71,7 +71,7 @@ public class AccountController {
 		user.setPhoneNumber(userModel.getPhoneNumber());
 		user.setBirthOfDate(new SimpleDateFormat("dd-MM-yyyy").parse(day + "-" + month + "-" + year));
 		
-		User oldUrs = userService.findUserById(2L);
+		User oldUrs = userService.findUserById(user.getId());
         String oldFile = oldUrs.getAvatar();
         if (file != null && !file.isEmpty()) {
             // Lưu ảnh mới nếu có

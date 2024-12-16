@@ -83,8 +83,7 @@
 									</div>
 									<div class="col">
 										<div class="col d-flex flex-column">
-											<image id="preview" th:src="@{/uploads/{filename}(filename=${user.avatar})}" alt="Avatar" width="100%"
-												class="mb-3" />
+											<img id="preview" th:src="${user != null && user.avatar != null} ? @{/uploads/{filename}(filename=${user.avatar})} : @{/assets/img/logo/avatar.jpg}" width="100%" class="mb-3"/>
 											<label for="fileInput" class="btn btn-primary mx-5"> Chọn
 												tệp </label> <input type="file" name="file" id="fileInput" class="d-none" accept="image/*" onchange="previewImage(event)"/>
 											<span class="text-grey">Dung lượng tối đa 1 MB</span>

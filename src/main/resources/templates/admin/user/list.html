@@ -42,9 +42,7 @@
                 <td th:text="${user.email}"></td>
                 <td th:text="${user.role.roleName}"></td>
                 <td>
-                    <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-warning btn-sm">Sửa</a>
-                    <a th:href="@{/admin/users/delete/{id}(id=${user.id})}" class="btn btn-danger btn-sm"
-                       onclick="return confirm('Bạn có chắc chắn muốn xóa?');">Xóa</a>
+                    <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-warning btn-sm">Xem thông tin</a>
                 </td>
             </tr>
         </tbody>

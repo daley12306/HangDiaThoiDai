@@ -7,7 +7,7 @@
 </head>
 <body>
     <div layout:fragment="content">
-        <h2>Edit User</h2>
+        <h2>Xem thông tin người dùng</h2>
         <form th:action="@{/admin/users/edit/{id}(id=${user.id})}" th:object="${user}" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="fullName" class="form-label">Họ và tên</label>
@@ -32,7 +32,6 @@
             
              <div class="mb-3">
                 <label for="avatar" class="form-label">Avatar</label>
-                <input type="file" class="form-control" id="avatar" name="file" accept="image/*" onchange="previewImage(event)" /><br>
                 <div>
                     <img id="preview" th:src="@{/uploads/{filename}(filename=${user.avatar})}" alt="Avatar" style="width: 150px; height: 150px;" />
                 </div>
@@ -49,7 +48,6 @@
 			    </select>
 			</div>
 			<br>
-            <button type="submit" class="btn btn-primary">Lưu</button>
             <a href="/admin/users" class="btn btn-secondary">Hủy</a>
         </form>
     </div>

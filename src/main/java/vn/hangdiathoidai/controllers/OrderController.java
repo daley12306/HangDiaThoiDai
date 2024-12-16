@@ -1,10 +1,13 @@
 package vn.hangdiathoidai.controllers;
 
 
+import java.nio.file.attribute.UserPrincipal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ch.qos.logback.core.model.Model;
 import vn.hangdiathoidai.entity.OrderDetail;
 import vn.hangdiathoidai.entity.OrderItem;
+import vn.hangdiathoidai.entity.User;
 import vn.hangdiathoidai.services.OrderDetailService;
 import vn.hangdiathoidai.services.OrderItemService;
+import vn.hangdiathoidai.services.UserService;
 
 @Controller
 @RequestMapping("/order")
@@ -25,13 +30,16 @@ public class OrderController {
 	private OrderDetailService orderDetailService;
 	@Autowired
 	private OrderItemService orderItemService;
+	@Autowired
+	private UserService userService;
 
 	@RequestMapping("")
 	public String listOrders(@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "size", defaultValue = "10") int size, ModelMap model) {
+			@RequestParam(value = "size", defaultValue = "10") int size, ModelMap model,
+			@AuthenticationPrincipal UserDetails userDetails) {
 
-
-		Page<OrderDetail> order = orderDetailService.findOrdersByUserId(2L, page, size);
+		User user = userService.findByUsername(userDetails.getUsername());
+		Page<OrderDetail> order = orderDetailService.findOrdersByUserId(user.getId(), page, size);
 		model.addAttribute("orders", order.getContent());
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", order.getTotalPages());
