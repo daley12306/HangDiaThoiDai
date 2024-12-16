@@ -28,4 +28,17 @@ public class CartItem {
     private Integer quantity;
     private Date createdAt;
     private Date updatedAt;
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id=" + id +
+                ", cart=" + cart +
+                ", product=" + product +
+                ", productsSku=" + productsSku +
+                ", quantity=" + quantity +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

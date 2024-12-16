@@ -36,45 +36,12 @@
                                 <a class="dropdown-item" href="/logout">Đăng xuất</a>
                             </div>
                           </li>
-                        <li class="nav-item dropdown">
-                            <a href="javascript:void(0)" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-shopping-basket"></i> <span class="badge badge-primary" th:text="${cartItemCount}"></span>
+
+                        <li class="nav-item">
+                            <a href="/cart" class="nav-link">
+                                <i class="fa fa-shopping-basket"></i>
+                                <span class="badge badge-primary" th:text="${cartItemCount}">0</span>
                             </a>
-                            <div class="dropdown-menu shopping-cart">
-                            	<ul sec:authorize="isAnonymous()" class="text-center p-3">
-                            	    <i class="fa fa-shopping-cart fa-2x text-primary m-3"></i>
-                            	    <p>Đăng nhập để xem giỏ hàng</p>
-                            	</ul>
-                                <ul sec:authorize="isAuthenticated()">
-                                    <li>
-                                        <div class="drop-title">Giỏ hàng</div>
-                                    </li>
-                                    <li>
-                                        <div class="shopping-cart-list">
-                                            <div class="media" th:each="cartItem, stat : ${cartItems}">
-                                                <img class="d-flex mr-3" src="@{cartItem.product.cover}" width="60">
-                                                <div class="media-body">
-                                                    <h5><a th:href="@{/product/{id}(id=${cartItem.product.id})}" th:text="${cartItem.product.name}">Carrot</a></h5>
-                                                    <p class="price">
-                                                        <span th:text="${#numbers.formatDecimal(cartItem.productsSku.price, 0, 'COMMA', 0, 'POINT')} + '₫'"></span>
-                                                    </p>
-                                                    <p class="text-muted" th:text="'Số lượng: ' + ${cartItem.quantity}"></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="drop-title d-flex justify-content-between">
-                                            <span>Tổng:</span>
-                                            <span class="text-primary"><strong th:text="${#numbers.formatDecimal(cart.total, 0, 'COMMA', 0, 'POINT')} + '₫'"></strong></span>
-                                        </div>
-                                    </li>
-                                    <li class="d-flex justify-content-between pl-3 pr-3 pt-3">
-                                        <a href="/cart" class="btn btn-default">Xem giỏ hàng</a>
-                                        <a href="/checkout" class="btn btn-primary">Thanh toán</a>
-                                    </li>
-                                </ul>
-                            </div>
                         </li>
                     </ul>
                 </div>

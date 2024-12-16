@@ -22,6 +22,5 @@ public class Cart {
     private User user;
     @Column(nullable = false)
     private Integer total;
-    
 
 }
