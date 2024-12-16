@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+<head>
+    <title>Sửa Voucher</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h2>Sửa Voucher</h2>
+        
+        <!-- Form Chỉnh sửa Voucher -->
+        <form action="/admin/voucher/update" method="post">
+            <input type="hidden" name="id" th:value="${voucher.id}">
+            <div class="mb-3">
+                <label for="code" class="form-label">Mã Voucher</label>
+                <input type="text" class="form-control" id="code" name="code" th:value="${voucher.code}" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Mô Tả</label>
+                <textarea class="form-control" id="description" name="description" required th:text="${voucher.description}"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="discountValue" class="form-label">Giảm Giá (%)</label>
+                <input type="text" class="form-control" id="discountValue" name="discountValue" th:value="${voucher.discountValue}" required min="0" max="100">
+            </div>
+            <div class="mb-3">
+                <label for="minOrderValue" class="form-label">Giá trị tối thiểu của đơn hàng</label>
+                <input type="text" class="form-control" id="minOrderValue" name="minOrderValue" th:value="${voucher.minOrderValue}" required min="0">
+            </div>
+            <div class="mb-3">
+		        <label for="discountType" class="form-label">Loại Giảm Giá</label>
+		        <select class="form-control" id="discountType" name="discountType" required>
+		            <option value="PRODUCT" th:selected="${voucher.discountType == 'PRODUCT'}">Giảm giá sản phẩm</option>
+		            <option value="SHIPPING" th:selected="${voucher.discountType == 'SHIPPING'}">Giảm phí vận chuyển</option>
+		        </select>
+		    </div>
+            <div class="mb-3">
+                <label for="startDate" class="form-label">Ngày Bắt Đầu</label>
+                <input type="date" class="form-control" id="startDate" name="startDate" th:value="${voucher.startDate}" required>
+            </div>
+            <div class="mb-3">
+                <label for="endDate" class="form-label">Ngày Kết Thúc</label>
+                <input type="date" class="form-control" id="endDate" name="endDate" th:value="${voucher.endDate}" required>
+            </div>
+            <div class="mb-3">
+                <label for="quantity" class="form-label">Số Lượng Voucher</label>
+                <input type="number" class="form-control" id="quantity" name="quantity" th:value="${voucher.quantity}" required min="1">
+            </div>
+            <button type="submit" class="btn btn-primary">Cập Nhật Voucher</button>
+            <a href="#" th:href="@{/admin/voucher}" class="btn btn-secondary ms-2">Trở lại</a>
+        </form>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+<head>
+    <title>Chỉnh sửa Danh mục phụ</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h2>Edit SubCategory</h2>
+        <form action="#" th:action="@{/admin/subcategory/edit/{id}(id=${subCategory.id})}" th:object="${subCategory}" method="post">
+            <input type="hidden" th:field="*{id}">
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên danh mục phụ:</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="parentCategory">Danh mục chính:</label>
+                <select class="form-control" id="parentCategory" th:field="*{parentCategory.id}">
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                </select>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+        <a href="#" class="btn btn-secondary" th:href="@{/admin/subcategory}">Trở về</a>
+        </form>
+        
+    </div>
+</body>
+</html>

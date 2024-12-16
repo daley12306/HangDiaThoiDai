@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<title>Hãng đĩa Thời Đại</title>
+
+<!-- Google Fonts -->
+<link th:href="@{https://fonts.googleapis.com/css?family=Montserrat:400,700}" rel="stylesheet" type="text/css">
+<link th:href="@{https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic}" rel="stylesheet" type="text/css">
+
+<!-- Local Fonts -->
+<link th:href="@{/assets/fonts/sb-bistro/sb-bistro.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/assets/fonts/font-awesome/font-awesome.css}" rel="stylesheet" type="text/css">
+
+<!-- Packages CSS -->
+<link rel="stylesheet" type="text/css" media="all" th:href="@{/assets/packages/bootstrap/bootstrap.css}">
+<link rel="stylesheet" type="text/css" media="all" th:href="@{/assets/packages/o2system-ui/o2system-ui.css}">
+<link rel="stylesheet" type="text/css" media="all" th:href="@{/assets/packages/owl-carousel/owl-carousel.css}">
+<link rel="stylesheet" type="text/css" media="all" th:href="@{/assets/packages/cloudzoom/cloudzoom.css}">
+<link rel="stylesheet" type="text/css" media="all" th:href="@{/assets/packages/thumbelina/thumbelina.css}">
+<link rel="stylesheet" type="text/css" media="all" th:href="@{/assets/packages/bootstrap-touchspin/bootstrap-touchspin.css}">
+<link rel="stylesheet" type="text/css" media="all" th:href="@{/assets/css/theme.css}">
+
+
+<!-- JavaScript Files -->
+<script type="text/javascript" th:src="@{/assets/js/jquery.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/jquery-migrate.js}"></script>
+<script type="text/javascript" th:src="@{/assets/packages/bootstrap/libraries/popper.js}"></script>
+<script type="text/javascript" th:src="@{/assets/packages/bootstrap/bootstrap.js}"></script>
+<script type="text/javascript" th:src="@{/assets/packages/o2system-ui/o2system-ui.js}"></script>
+<script type="text/javascript" th:src="@{/assets/packages/owl-carousel/owl-carousel.js}"></script>
+<script type="text/javascript" th:src="@{/assets/packages/cloudzoom/cloudzoom.js}"></script>
+<script type="text/javascript" th:src="@{/assets/packages/thumbelina/thumbelina.js}"></script>
+<script type="text/javascript" th:src="@{/assets/packages/bootstrap-touchspin/bootstrap-touchspin.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/theme.js}"></script>
+
+</head>
+
+<body>
+	<header>
+		<div th:replace="~{fragments/header::header}"></div>
+	</header>
+
+	<main class="container">
+		<section>
+			<div layout:fragment="content"></div>
+		</section>
+	</main>
+
+	<footer>
+		<div th:replace="~{fragments/footer::footer}"></div>
+	</footer>
+
+</body>
+</html>

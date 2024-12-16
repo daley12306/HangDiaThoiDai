@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+<head>
+    <title>Thêm Sản phẩm</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h2>Thêm Sản phẩm</h2>
+
+        <form th:action="@{/admin/products/create}" th:object="${product}" method="post" enctype="multipart/form-data">
+        
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên sản phẩm</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Nhập tên sản phẩm" required>
+            </div>
+            <div class="mb-3">
+                <label for="cover" class="form-label">Cover</label>
+                <input type="file" class="form-control" id="cover" name="file" accept="image/*" onchange="previewImage(event)" required /><br>
+                <img id="preview" src="#" alt="Preview" style="display: none; width: 150px; height: 150px;" />
+            </div>
+            
+             <div class="form-group">
+		        <label for="subCategory">Chọn SubCategory</label>
+		        <select id="subCategory" name="subCategory" class="form-control">
+		            <option value="">--Chọn SubCategory--</option>
+		            <!-- Hiển thị SubCategory theo nhóm Category -->
+		            <th:block th:each="entry : ${groupedSubCategories}">
+		                <optgroup th:label="${entry.key}">
+		                    <option th:each="subCategory : ${entry.value}" 
+		                            th:value="${subCategory.id}" 
+		                            th:text="${subCategory.name}">
+		                    </option>
+		                </optgroup>
+		            </th:block>
+		        </select>
+		    </div>
+		    <br>
+            <div class="mb-3">
+                <label for="description" class="form-label">Mô tả</label>
+                <textarea class="form-control" id="description" th:field="*{description}" placeholder="Nhập mô tả sản phẩm" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Thêm Sản phẩm</button>
+            <a href="/admin/products" class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+
+  
+
+</body>
+</html>

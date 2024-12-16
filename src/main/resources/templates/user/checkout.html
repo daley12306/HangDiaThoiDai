@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}">
+
+<body layout:fragment="content">
+	<div id="page-content" class="page-content">
+		<div class="banner">
+			<div class="jumbotron jumbotron-bg text-center rounded-0"
+				style="background-image: url('/assets/img/background-header.jpg');">
+				<div class="container">
+					<h1 class="pt-5">Thanh toán</h1>
+				</div>
+			</div>
+		</div>
+
+		<section id="checkout">
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-12 col-sm-7">
+						<div class="holder">
+							<h5 class="mb-3">Đơn hàng của bạn</h5>
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Sản phẩm</th>
+											<th class="text-right">Tổng</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="cartItem, stat : ${cartItems}">
+											<td
+												th:text="${cartItem.product.name + ' x' + cartItem.quantity}"></td>
+											<td class="text-right"
+												th:text="${#numbers.formatDecimal(cartItem.quantity * cartItem.productsSku.price, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+										</tr>
+									</tbody>
+									<tfooter>
+									<tr>
+										<td><strong>Tổng giỏ hàng</strong></td>
+										<td class="text-right"
+											th:text="${#numbers.formatDecimal(cart.total, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+									</tr>
+									<tr>
+										<td><strong>Vận chuyển</strong></td>
+										<td class="text-right"
+											th:text="${#numbers.formatDecimal(selectedCarrier.shippingFee, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+									</tr>
+									<tr th:if="${discountProduct != 0}">
+										<td><strong>Giảm giá sản phẩm</strong></td>
+										<td class="text-right"
+											th:text="${'-' + #numbers.formatDecimal(discountProduct, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+									</tr>
+									<tr th:if="${discountShipping != 0}">
+										<td><strong>Giảm giá vận chuyển</strong></td>
+										<td class="text-right"
+											th:text="${'-' + #numbers.formatDecimal(discountShipping, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+									</tr>
+									<tr>
+										<td><strong>TỔNG THANH TOÁN</strong></td>
+										<td class="text-right font-weight-bold"
+											th:text="${#numbers.formatDecimal(cart.total + selectedCarrier.shippingFee - discountProduct - discountShipping, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+									</tr>
+									</tfooter>
+								</table>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="col-xs-12 col-sm-5 d-flex flex-column">
+						<h5 class="mb-3">Địa chỉ nhận hàng</h5>
+						<div class="row border rounded p-3 mb-3l">
+							<div class="d-flex flex-column col">
+								<h6 class="mb-1"
+									th:text="${selectedAddress.number + ' ' + selectedAddress.street}"></h6>
+								<small
+									th:text="${selectedAddress.ward + ', ' + selectedAddress.district + ', ' + selectedAddress.province}"></small>
+								<p class="mb-1 mt-2" th:text="${selectedAddress.phoneNumber}"></p>
+							</div>
+							<a class="col-auto" href="" data-toggle="modal"
+								data-target="#detailModalAddress">Thay đổi</a>
+						</div>
+						<h5 class="my-3">Đơn vị vận chuyển</h5>
+						<div class="row border rounded p-3 mb-3">
+							<div class="d-flex flex-column col">
+								<h6 class="mb-1" th:text="${selectedCarrier.name}"></h6>
+								<p class="mb-1"
+									th:text="${#numbers.formatDecimal(selectedCarrier.shippingFee, 0, 'COMMA', 0, 'POINT')} + '₫'"></p>
+							</div>
+							<a class="col-auto" href="" data-toggle="modal"
+								data-target="#detailModalCarrier">Thay đổi</a>
+						</div>
+						<form action="/checkout/voucher" method="post" class="mb-3">
+							<div class="input-group w-50 float-right">
+								<input class="form-control" placeholder="Mã giảm giá"
+									type="text" name="voucherCode">
+								<div class="input-group-append">
+									<button class="btn btn-primary" type="submit">Áp dụng</button>
+								</div>
+								<p th:text="${message}"></p>
+							</div>
+						</form>
+						<h5 class="mb-3">Phương thức thanh toán</h5>
+						<form action="/checkout/submit" method="post" class="d-flex flex-column">
+							<div class="form-check-inline">
+								<label class="form-check-label"> <input
+									class="form-check-input" type="radio" name="paymentMethod"
+									id="exampleRadios1" value="COD" checked> Thanh toán khi
+									nhận hàng
+								</label>
+							</div>
+							<div class="form-check-inline">
+								<label class="form-check-label"> <input
+									class="form-check-input" type="radio" name="paymentMethod"
+									id="exampleRadios2" value="VNPAY"> VNPAY
+								</label> <img width="50px"
+									src="https://vinadesign.vn/uploads/thumbnails/800/2023/05/vnpay-logo-vinadesign-25-12-59-16.jpg" />
+							</div>
+							<div class="form-check-inline">
+								<button type="submit" class="btn btn-primary float-right">
+									THANH TOÁN <i class="fa fa-check"></i>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+		</section>
+
+		<!-- Modal Address -->
+		<div class="modal fade" id="detailModalAddress" tabindex="-1"
+			role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Chọn địa chỉ</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item"
+								th:each="address, stat : ${addresses}">
+								<div class="d-flex w-100 row">
+									<div class="d-flex flex-column col">
+										<h6 class="mb-1"
+											th:text="${address.number + ' ' + address.street}"></h6>
+										<small
+											th:text="${address.ward + ', ' + address.district + ', ' + address.province}"></small>
+									</div>
+									<p class="col-auto" th:text="${address.phoneNumber}"></p>
+									<div class="d-flex flex-column col p-0">
+										<div class="mb-1 text-right">
+											<a th:if="${selectedAddress.id != address.id }"
+												th:href="@{/checkout/change-address/{id}(id=${address.id})}">Chọn</a>
+										</div>
+										<div>
+											<span th:if="${address.isDefault}"
+												class="badge badge-primary absolute p-1">Mặc định</span>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal Carrier -->
+		<div class="modal fade" id="detailModalCarrier" tabindex="-1"
+			role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Chọn đơn vị
+							vận chuyển</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item" th:each="carrier, stat : ${carriers}">
+								<div class="d-flex w-100 row">
+									<div class="d-flex flex-column col">
+										<h6 class="mb-1" th:text="${carrier.name}"></h6>
+										<p class="mb-1"
+											th:text="${#numbers.formatDecimal(carrier.shippingFee, 0, 'COMMA', 0, 'POINT')} + '₫'"></p>
+									</div>
+									<div class="d-flex flex-column col p-0 mb-1 text-right">
+										<a th:if="${selectedCarrier.id != carrier.id }"
+											th:href="@{/checkout/change-carrier/{id}(id=${carrier.id})}">Chọn</a>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

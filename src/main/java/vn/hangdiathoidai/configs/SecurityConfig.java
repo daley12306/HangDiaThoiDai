@@ -2,40 +2,20 @@ package vn.hangdiathoidai.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import vn.hangdiathoidai.services.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
-	@Bean
-	// authentication
-	public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-		UserDetails admin = User.withUsername("admin")
-				.password("123")
-				.roles("ADMIN")
-				.build();
-		
-		UserDetails user = User.withUsername("user")
-				.password("123")
-				.roles("USER")
-				.build();
-		return new InMemoryUserDetailsManager(user, admin);
-	}
-	
-	@Bean
-	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-	
+public class SecurityConfig{
+
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
@@ -43,8 +23,32 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authorize -> authorize
                        .requestMatchers("/**", "/home","/admin", "/css/**", "/js/**", "/images/**", "/assets/**").permitAll()
                        .anyRequest().authenticated()
+                       
 				)
-				.formLogin(Customizer.withDefaults())
+				.formLogin(login -> login
+						.loginPage("/login")
+						.defaultSuccessUrl("/"))
+				.logout(logout -> logout
+						.logoutSuccessUrl("/"))
 				.build();
 	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	public UserDetailsService userDetailsService() {
+	    return new CustomUserDetailsService();
+	}
+	
+	@Bean
+	public DaoAuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
+	    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+	    authProvider.setUserDetailsService(userDetailsService);
+	    authProvider.setPasswordEncoder(passwordEncoder);
+	    return authProvider;
+	}
+	
 }

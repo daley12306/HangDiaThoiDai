@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}">
+
+<body layout:fragment="content">
+	<div id="page-content" class="page-content">
+		<div class="banner">
+			<div class="jumbotron jumbotron-bg text-center rounded-0"
+				style="background-image: url('/assets/img/background-header.jpg');">
+				<div class="container">
+					<h1 class="pt-5">Giỏ hàng của bạn</h1>
+				</div>
+			</div>
+		</div>
+
+		<section id="cart">
+			<div class="container">
+				<div th:if="${cartItems.size() > 0}" class="row">
+					<div class="col-md-12">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th width="10%"></th>
+										<th>Sản phẩm</th>
+										<th>Giá</th>
+										<th width="15%">Số lượng</th>
+										<th>Tổng tiền từng sản phẩm</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="cartItem, stat : ${cartItems}">
+										<td><img th:src="@{/uploads/{file}(file=${cartItem.product.cover})}" width="60">
+										</td>
+										<td th:text="${cartItem.product.name}"></td>
+										<td th:text="${#numbers.formatDecimal(cartItem.productsSku.price, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+										<td><input class="vertical-spin" type="text"
+											data-bts-button-down-class="btn btn-primary"
+											data-bts-button-up-class="btn btn-primary"
+											th:value="${cartItem.quantity}" name="vertical-spin"></td>
+										<td
+											th:text="${#numbers.formatDecimal(cartItem.quantity * cartItem.productsSku.price, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+										<td><a th:href="@{/cart/delete/{id}(id=${cartItem.id})}"
+											class="text-danger"><i class="fa fa-times"></i></a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="col">
+						<a href="/shop" class="btn btn-default">Tiếp tục mua sắm</a>
+					</div>
+					<div class="col text-right">
+						<h6 class="mt-3"
+							th:text="'Tổng: ' + ${#numbers.formatDecimal(cart.total, 0, 'COMMA', 0, 'POINT')} + '₫'"></h6>
+						<a href="/checkout" class="btn btn-lg btn-primary">Thanh
+							toán <i class="fa fa-long-arrow-right"></i>
+						</a>
+					</div>
+				</div>
+				<div th:unless="${cartItems.size() > 0}" class="col-xs-12 col-sm-7 m-auto text-center">
+					<i class="fa fa-shopping-cart fa-4x text-primary mb-3"></i>
+					<h5>Giỏ hàng của bạn đang trống</h5>
+					<p>Hãy chọn sản phẩm bạn muốn mua và thêm vào giỏ hàng nhé!</p>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

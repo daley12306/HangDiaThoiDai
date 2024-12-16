@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout.html}">
+
+<body layout:fragment="content">
+	<div class="col-xs-12 col-sm-7 m-auto text-center">
+		<!-- SUCCESSED -->
+		<div th:if="${paymentStatus == 1}">
+			<i class="fa fa-check-circle fa-4x text-primary mb-3"></i>
+			<h3 class="mb-3">Đặt hàng thành công</h3>
+			<p>Cảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi</p>
+			<p>Mã đơn hàng của bạn: <strong th:text="${order.id}"></strong></p>
+		</div>
+		
+		<!-- FAILED -->
+		<div th:unless="${paymentStatus == 1}">
+			<i class="fa fa-times-circle fa-4x text-primary mb-3"></i>
+            <h3 class="mb-3">Đặt hàng thất bại</h3>
+            <p>Đã có lỗi xảy ra trong quá trình đặt hàng</p>	
+		</div>
+		
+		<a href="/" class="btn btn-primary">Về trang chủ</a>
+	</div>
+</body>
+</html>

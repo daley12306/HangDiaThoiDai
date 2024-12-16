@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import vn.hangdiathoidai.entity.Role;
 import vn.hangdiathoidai.entity.User;
 import vn.hangdiathoidai.services.FileStorageService;
@@ -41,13 +45,14 @@ public class UserController {
     private RoleService roleService;
     @Value("${upload.dir}") // Đường dẫn thư mục upload được cấu hình trong application.properties
     private String uploadDir;
-
+    @Autowired
+    PasswordEncoder passwordEncoder;
     
  // Hiển thị danh sách user với phân trang
     @GetMapping
     public String listUsers(@RequestParam(value = "search", required = false) String searchTerm, 
                             @RequestParam(value = "page", defaultValue = "0") int page, 
-                            Model model) {
+                            Model model, HttpSession session, HttpServletRequest request) {
         Pageable pageable = PageRequest.of(page, 10);
         Page<User> users;
         if (searchTerm != null && !searchTerm.isEmpty()) {
@@ -55,10 +60,16 @@ public class UserController {
         } else {
             users = userService.searchUsers("", pageable);
         }
+        session.setAttribute("currentPage", page);
         model.addAttribute("users", users);
         model.addAttribute("search", searchTerm);
-        return "admin/user/list";  // Đảm bảo có trang "list.html" trong thư mục templates
+        model.addAttribute("currentPage", page);
+        
+        model.addAttribute("currentUrl", request.getRequestURI());
+        
+        return "admin/user/list";  
     }
+    
     
     // Thêm user
     @GetMapping("/create")
@@ -70,37 +81,49 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String saveUser(@ModelAttribute User user, @RequestParam("file") MultipartFile file) {
-    	
-    	if (!file.isEmpty()) {
+    public String saveUser(@ModelAttribute User user, 
+                           @RequestParam("file") MultipartFile file,
+                           @RequestParam(defaultValue = "0") int page,  // Nhận tham số trang
+                           @RequestParam(defaultValue = "10") int size, HttpSession session) {  // Số lượng mỗi trang
+
+        if (!file.isEmpty()) {
             try {
-                // Tạo đường dẫn lưu trữ ảnh
-                String uploadDirectory = uploadDir + File.separator + "avatars"; 
+                // Lưu ảnh như đã làm trước đây
+                String uploadDirectory = uploadDir + File.separator;
                 File dir = new File(uploadDirectory);
                 if (!dir.exists()) {
                     dir.mkdirs(); // Tạo thư mục nếu chưa tồn tại
                 }
 
-                // Lấy tên ảnh
-                String fileName = file.getOriginalFilename();
+                String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
                 Path path = Paths.get(uploadDirectory + File.separator + fileName);
-
-                // Lưu ảnh vào thư mục
                 Files.write(path, file.getBytes());
-                
-                // Lưu đường dẫn ảnh vào trường avatar của User
-                user.setAvatar("/uploads/"+fileName);
+                user.setAvatar(fileName);  // Lưu đường dẫn ảnh vào trường avatar của User
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));  // Mã hóa mật khẩu
+        userService.saveUser(user);  // Lưu người dùng vào cơ sở dữ liệu
 
-        // Lưu user vào cơ sở dữ liệu
-        userService.saveUser(user);
+        Integer currentPage = (Integer) session.getAttribute("currentPage");
+        if (currentPage == null) {
+            currentPage = 0;  // Nếu không có trang hiện tại, mặc định là trang đầu tiên
+        }
 
-        // Redirect đến trang danh sách người dùng
-        return "redirect:/admin/users";
+        // Kiểm tra số lượng SubCategory còn lại sau khi xóa
+        long totalUser = userService.getTotalUsers();  // Tổng số phần tử
+        int totalPages = (int) Math.ceil((double) totalUser / size);  // Tính tổng số trang
+        
+        // Nếu số trang còn lại là 0, chuyển về trang đầu tiên
+        if (totalUser == 0 || currentPage >= totalPages) {
+            currentPage = Math.max(totalPages - 1, 0);  // Nếu không còn phần tử hoặc trang hiện tại vượt quá tổng số trang, quay lại trang trước đó
+        }
+
+        // Quay lại trang đúng
+        return "redirect:/admin/users?page=" + currentPage + "&size=" + size;  // Quay lại danh sách SubCategory
     }
+
     
 
     // Trang chỉnh sửa người dùng
@@ -118,42 +141,48 @@ public class UserController {
 
     // Xử lý form chỉnh sửa người dùng
     @PostMapping("/edit/{id}")
-    public String updateUser(
+    public String editUser(
             @PathVariable Long id,
             @ModelAttribute User user,
-            @RequestParam("file") MultipartFile file
-    ) {
-        // Nếu có ảnh mới được tải lên
-        if (!file.isEmpty()) {
-            try {
-                // Tạo thư mục lưu ảnh nếu chưa tồn tại
-                String uploadDirectory = uploadDir + File.separator + "avatars";
-                File dir = new File(uploadDirectory);
-                if (!dir.exists()) {
-                    dir.mkdirs(); // Tạo thư mục nếu chưa tồn tại
-                }
-
-                // Lấy tên file và lưu ảnh vào thư mục
-                String fileName = file.getOriginalFilename();
-                Path path = Paths.get(uploadDirectory, fileName);
-                file.transferTo(path); // Lưu file
-
-                // Cập nhật trường avatar trong user
-                user.setAvatar("/uploads/" + fileName); // Đường dẫn ảnh sẽ được lưu trong DB
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            @RequestParam(value = "file", required = false) MultipartFile file, HttpSession session
+    ) throws IOException {
+        User existingUser = userService.findUserById(id);  // Lấy user hiện tại từ DB
+        String oldFile = existingUser.getAvatar();  // Lấy tên ảnh cũ
+        // Nếu không tải ảnh mới lên, giữ lại ảnh cũ
+        if (file != null && !file.isEmpty()) {
+            // Lưu ảnh mới nếu có
+        	String filename = fileStorageService.saveFile(file);
+        	user.setAvatar(filename);
+        }else {
+            // Nếu không thay đổi ảnh, giữ nguyên avatar cũ
+            user.setAvatar(oldFile);
         }
 
-        // Cập nhật thông tin người dùng
+        // Cập nhật thông tin người dùng trong DB
+        user.setId(id);  // Đảm bảo ID đúng
+        user.setPassword(passwordEncoder.encode(user.getPassword()));  // Giữ nguyên mật khẩu
         userService.saveUser(user);
-        return "redirect:/admin/users";  // Quay lại trang danh sách người dùng
+        
+        Integer page = (Integer) session.getAttribute("currentPage");
+        if (page == null) {
+            page = 0;  // Nếu không có trang hiện tại, mặc định là trang đầu tiên
+        }
+        return "redirect:/admin/users?page="+page;  // Redirect về trang danh sách người dùng
     }
+
     // Xóa user
-    @PostMapping("/delete/{id}")
-    public String deleteUser(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id, RedirectAttributes redirectAttributes, HttpSession session) {
         userService.deleteUser(id);
+        Integer page = (Integer) session.getAttribute("currentPage");
+        if (page == null) {
+            page = 0;  // Nếu không có trang hiện tại, mặc định là trang đầu tiên
+        }
         redirectAttributes.addFlashAttribute("message", "User deleted successfully");
-        return "redirect:/admin/users";
+        return "redirect:/admin/users?page=" + page;  // Redirect về trang hiện tại";
     }
+    
+    
+
+
 }

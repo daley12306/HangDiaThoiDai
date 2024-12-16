@@ -12,8 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
 	 @Value("${upload.dir}")
-	 
-	    private String uploadDir;
+	 private String uploadDir;
 
 	 public String saveFile(MultipartFile file) throws IOException {
 	        // Tạo thư mục nếu chưa tồn tại
@@ -26,7 +25,6 @@ public class FileStorageServiceImpl implements FileStorageService {
 	        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
 	        Path targetLocation = path.resolve(fileName);
 	        Files.copy(file.getInputStream(), targetLocation);
-
 	        return fileName; // Trả về tên file lưu trữ
 	    }
 }

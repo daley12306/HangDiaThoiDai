@@ -1,14 +1,15 @@
 package vn.hangdiathoidai.services;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import lombok.experimental.var;
 import vn.hangdiathoidai.entity.User;
 import vn.hangdiathoidai.repository.UserRepository;
 
@@ -57,6 +58,28 @@ public class UserServiceImpl implements UserService {
 	public User findUserById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
+
+	@Override
+	public long getTotalUsers() {
+		return userRepository.count();
+	}
+
+
+	@Override
+	public User findByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+
+	@Override
+	public User findByPhoneNumber(String phoneNumber) {
+		return userRepository.findByPhoneNumber(phoneNumber);
+	}
+	
+	@Override
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
+
 }
 
 		

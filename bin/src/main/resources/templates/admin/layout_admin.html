@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/assets/css/theme.css}">
+</head>
+<body>
+    <!-- Header with Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Admin Panel</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${currentUrl == '/admin/dashboard' ? ' active' : ''}" th:href="@{/admin/dashboard}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${currentUrl == '/admin/products' ? ' active' : ''}" th:href="@{/admin/products}">Sản Phẩm</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${currentUrl == '/admin/categories' ? ' active' : ''}" th:href="@{/admin/categories}">Danh mục</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${currentUrl == '/admin/subcategory' ? ' active' : ''}" th:href="@{/admin/subcategory}">Danh mục phụ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${currentUrl == '/admin/users' ? ' active' : ''}" th:href="@{/admin/users}">Người dùng</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${currentUrl == '/admin/carrier' ? ' active' : ''}" th:href="@{/admin/carrier}">Nhà vận chuyển</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${currentUrl == '/admin/voucher' ? ' active' : ''}" th:href="@{/admin/voucher}">Voucher</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${currentUrl == '/admin/order' ? ' active' : ''}" th:href="@{/admin/order}">Đơn hàng</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+    <!-- Header -->
+    <header class="bg-dark text-white p-3">
+        <h1>Admin Dashboard</h1>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div layout:fragment="content"></div> <!-- Nội dung từ các view con -->
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center py-3 mt-5">
+        <p>© 2024 Admin Panel</p>
+    </footer>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        // Hàm xem trước ảnh
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById('preview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>

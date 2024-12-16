@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{admin/layout_admin}">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Nhà Vận Chuyển</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <h2>Danh sách Nhà Vận Chuyển</h2>
+
+            <!-- Form tìm kiếm -->
+            <form class="mb-3 d-flex" th:action="@{/admin/carrier}" method="get">
+                <input type="hidden" name="page" th:value="${carriers.number}" />
+                <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm..." class="form-control me-2" style="max-width: 500px;">
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            </form>
+            
+            <a href="/admin/carrier/add" class="btn btn-success mb-3">Thêm Mới</a>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">STT</th>
+                        <th scope="col">Tên</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Phí Vận Chuyển</th>
+                        <th scope="col">Trạng Thái</th>
+                        <th scope="col">Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="carrier, iterStat : ${carriers.content}">
+                        <td th:text="${carriers.number * carriers.size + iterStat.index + 1}"></td>
+                        <td th:text="${carrier.name}"></td>
+                        <td th:text="${carrier.email}"></td>
+                        <td th:text="${carrier.shippingFee}"></td>
+                        <td th:text="${carrier.status}"></td>
+                        <td>
+                            <a th:href="@{/admin/carrier/edit/{id}(id=${carrier.id})}" class="btn btn-warning btn-sm">Sửa</a>
+                            <a th:href="@{/admin/carrier/delete/{id}(id=${carrier.id})}" 
+							   class="btn btn-danger btn-sm" 
+							   onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">Xóa</a>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Phân trang -->
+            <div class="d-flex justify-content-center">
+                <ul class="pagination">
+                    <!-- Nút << (Trang đầu tiên) -->
+                    <li th:class="${carriers.hasPrevious()} ? 'page-item' : 'page-item disabled'">
+                        <a class="page-link" 
+                           th:href="@{/admin/carrier(page=0, size=${carriers.size}, keyword=${keyword})}">&laquo;</a>
+                    </li>
+
+                    <!-- Các số trang -->
+                    <li th:each="i : ${#numbers.sequence(0, carriers.totalPages - 1)}" 
+                        th:class="${i == carriers.number} ? 'page-item active' : 'page-item'">
+                        <a class="page-link" 
+                           th:href="@{/admin/carrier(page=${i}, size=${carriers.size}, keyword=${keyword})}" 
+                           th:text="${i + 1}"></a>
+                    </li>
+
+                    <!-- Nút >> (Trang cuối cùng) -->
+                    <li th:class="${carriers.hasNext()} ? 'page-item' : 'page-item disabled'">
+                        <a class="page-link" 
+                           th:href="@{/admin/carrier(page=${carriers.totalPages - 1}, size=${carriers.size}, keyword=${keyword})}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

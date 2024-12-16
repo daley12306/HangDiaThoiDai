@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Detail</title>
+</head>
+<body layout:fragment="content">
+<div class="container mt-5">
+    <div class="row">
+        <!-- Hình ảnh sản phẩm -->
+        <div class="col-md-6">
+
+            <div class="border rounded p-2 text-center">
+                <img th:src="@{/uploads/{file}(file=${product.cover})}" class="img-fluid" alt="Product Image">
+            </div>
+        </div>
+
+        <!-- Thông tin sản phẩm -->
+        <div class="col-md-6">
+            <h1 class="display-5" th:text="${product.name}">Tên sản phẩm</h1>
+            <p th:text="'Loại đĩa: ' + ${product.subCategory.name}">Category Name</p>
+            <h5 class="text-danger" th:text="'$' + ${sku.price}">Product Price</h5>
+            <div class="mb-3">
+                <span class="badge badge-success" th:text="${product.status}">In Stock</span>
+            </div>
+            <p class="card-text" th:text="${product.description}">Product Description</p>
+
+<!--             Thêm vào Wishlist -->
+<!--             <form th:action="@{/wishlist}" method="post" class="mb-3"> -->
+<!--                 <input type="hidden" name="productId" th:value="${product.id}"> -->
+<!--                 <button type="submit" class="btn btn-warning">Add to Wishlist</button> -->
+<!--             </form> -->
+
+            <!-- Thêm vào Giỏ hàng -->
+            <form th:action="@{/cart/add/{productId}(productId=${product.id})}" method="post">
+                <!-- Số lượng sản phẩm -->
+                <label for="quantity">Số lượng:</label>
+                <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control mb-2">
+
+                <!-- Nút thêm vào giỏ hàng -->
+                <button type="submit" class="btn btn-primary w-100">Thêm vào Giỏ Hàng</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Đánh giá sản phẩm -->
+    <div class="mt-5">
+        <h2>Đánh giá</h2>
+        <!-- Hiển thị thông báo nếu không có đánh giá -->
+        <div th:if="${noReviewsMessage}">
+            <p class="text-muted" th:text="${noReviewsMessage}"></p>
+        </div>
+
+        <!-- Hiển thị các đánh giá -->
+        <div class="row" th:if="${reviews}">
+            <div class="col-md-4 mb-4" th:each="review : ${reviews}">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${review.user.username}">Tên người dùng</h5>
+
+                        <p class="card-text" th:text="${review.reviewText}">Đánh giá sản phẩm</p>
+                        <div class="mt-3">
+                            <span class="badge bg-light" th:text="'Đánh giá: ' + ${review.rating} + '/5' + '⭐'">Rating</span>
+                        </div>
+                        <p class="card-text">
+                            <small class="text-muted" th:text="${#dates.format(review.createdAt, 'dd-MM-yyyy HH:mm')}">Ngày đánh giá</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Form thêm đánh giá -->
+    <div class="mt-5">
+        <h3>Thêm đánh giá của bạn</h3>
+        <form th:action="@{/reviews/product/review}" method="post">
+            <input type="hidden" name="productId" th:value="${product.id}">
+            <!-- Điểm đánh giá -->
+            <div class="mb-3">
+                <label for="rating" class="form-label">Đánh giá (1-5):</label>
+                <select class="form-select" id="rating" name="rating" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <!-- Nội dung đánh giá -->
+            <div class="mb-3">
+                <label for="reviewText" class="form-label">Nội dung đánh giá:</label>
+                <textarea class="form-control" id="reviewText" name="reviewText" rows="3" required></textarea>
+            </div>
+            <!-- Nút gửi -->
+            <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
